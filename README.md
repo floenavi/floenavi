@@ -83,7 +83,6 @@ The Sync server can be started via the start script `FloeNavi-SyncServer.bat` as
 cd "C:\Program Files\FloeNavi\FloeNavi-SyncServer"
 bin/FloeNavi-SyncServer.bat
 ```
-Note: Close and reopen your console afterwards, so that the setting become active.
 
 ###### Mac
 ```bash
