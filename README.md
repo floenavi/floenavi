@@ -9,7 +9,7 @@ You can install the FloeNavi SyncServer on Linux, macOS, or Windows.
 
 ##### Java Runtime Environment
 The FlowNavi Sync Server runs on all major operating systems and requires only a Java Development Kit version 11 to run.
-To check if a Java Development Kit has already been installed on your system and if the environment variable `JAVA_HOME`is set, run the following command in your console and check its output.
+To check if a Java Development Kit has already been installed on your system and if the environment variable `JAVA_HOME` is set, run the following command in your console and check its output.
 
 ###### Windows
 ```bash
