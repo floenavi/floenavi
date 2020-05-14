@@ -1,5 +1,16 @@
 # FloeNavi
 
+## FlowNavi App
+### Installation
+#### Prerequisites
+Open the Android settings and search for the "Security" settings menu. You need to allow the installation from "Unknown sources" via enabling the according checkbox.
+
+#### App package installation
+Open the app package (APK) via USB stick or SD card (or any other method to open files on your Android device) with your Android file explorer app. Follow the installation process of the Android operating system to install the app.
+
+#### App package update
+Open the updated app package (APK) via USB stick or SD card (or any other method to open files on your Android device) with your Android file explorer app. Follow the installation process of the Android operating system to update the app. 
+
 ## FloeNavi SyncServer
 
 ### Installation
@@ -9,11 +20,12 @@ You can install the FloeNavi SyncServer on Linux, macOS, or Windows.
 
 ##### Java Runtime Environment
 The FlowNavi Sync Server runs on all major operating systems and requires only a Java Development Kit version 11 to run.
-To check if a Java Development Kit has already been installed on your system and if the environment variable `JAVA_HOME` is set, run the following command in your console and check its output.
+To check if a Java Development Kit has already been installed on your system and if the environment variable `JAVA_HOME` 
+is set, run the following command in your console and check its output.
 
 ###### Windows
 ```bash
-%JAVA_HOME%/bin/java.exe -version
+"%JAVA_HOME%"/bin/java.exe -version
 openjdk version "11.0.2" 2019-01-15
 OpenJDK Runtime Environment 18.9 (build 11.0.2+9)
 OpenJDK 64-Bit Server VM 18.9 (build 11.0.2+9, mixed mode)
@@ -37,18 +49,20 @@ OpenJDK 64-Bit Server VM 18.9 (build 11.0.2+9, mixed mode)
 
 If Java has not been installed on your system or if the installed version is not 11.0.2 then download one of these
 
-- Windows: https://download.java.net/java/GA/jdk11/9/GPL/openjdk-11.0.2_windows-x64_bin.zip ([sha256](https://download.java.net/java/GA/jdk11/9/GPL/openjdk-11.0.2_windows-x64_bin.zip.sha256))
-- Mac: https://download.java.net/java/GA/jdk11/9/GPL/openjdk-11.0.2_osx-x64_bin.tar.gz ([sha256](https://download.java.net/java/GA/jdk11/9/GPL/openjdk-11.0.2_osx-x64_bin.tar.gz.sha256))
-- Linux: https://download.java.net/java/GA/jdk11/9/GPL/openjdk-11.0.2_linux-x64_bin.tar.gz ([sha256](https://download.java.net/java/GA/jdk11/9/GPL/openjdk-11.0.2_linux-x64_bin.tar.gz.sha256))
+- Windows: https://download.java.net/java/GA/jdk11/9/GPL/openjdk-11.0.2_windows-x64_bin.zip
+- Mac: https://download.java.net/java/GA/jdk11/9/GPL/openjdk-11.0.2_osx-x64_bin.tar.gz
+- Linux: https://download.java.net/java/GA/jdk11/9/GPL/openjdk-11.0.2_linux-x64_bin.tar.gz
 
-Java Development Kits or take a look into your delivery package. You will find a file `openjdk-11.0.2_windows-x64_bin.zip`.
+Java Development Kits.
 
 Extract the downloaded archive into a folder, e.g.
+
 - Window: `C:\Program Files\Java`
 - Mac: `/Library/Java/JavaVirtualMachines`
 - Linux: `/opt/java/`
 
 and set your `JAVA_HOME` environment variable to the installed Java version as follows
+
 ###### Windows
 ```bash
 setx JAVA_HOME "C:\Program Files\Java\jdk-11.0.2"
@@ -65,11 +79,12 @@ export JAVA_HOME=/Library/Java/JavaVirtualMachines/jdk-11.0.2.jdk/Contents/Home
 export JAVA_HOME=/opt/java/jdk-11.0.2/
 ```
 
-Now repeat the first step to check if Java has already been installed in order to check if java has been installed sucessfully. Run the following command in your console and check the output.
+Now repeat the first step to check if Java has already been installed in order to check if java has been installed 
+sucessfully. Run the following command in your console and check its output.
 
 ###### Windows
 ```bash
-%JAVA_HOME%/bin/java.exe -version
+"%JAVA_HOME%"/bin/java.exe -version
 openjdk version "11.0.2" 2019-01-15
 OpenJDK Runtime Environment 18.9 (build 11.0.2+9)
 OpenJDK 64-Bit Server VM 18.9 (build 11.0.2+9, mixed mode)
@@ -92,22 +107,40 @@ OpenJDK 64-Bit Server VM 18.9 (build 11.0.2+9, mixed mode)
 ```
 
 ##### MySQL Server
-The FloeNavi Sync Server also requires a MySQL Server. If MySQL is not installed, please follow the instructions in section 2.3.4 
-of the MySQL Manual. You can find the manual online or take a look into your delivery package and look for a file `mysql-manual-8.0-en.pdf`.
-If you cannot download the MySQL server you'll find a MySQL Server in your delivery package. Look for a file `mysql-8.0.20-winx64.zip`.
+The FloeNavi Sync Server also requires a MySQL Server. If a MySQL Server is not installed, please follow the
+instructions in section 2.3.4 of the MySQL Server Manual. You can find the MySQL Server Manual online at 
+https://dev.mysql.com/doc/. The MySQl Server itself can be downloaded from https://dev.mysql.com/downloads/mysql/.
 
 #### Get FloeNavi SyncServer
 If you have a delivery package then look for a file named `FloeNavi-SyncServer-Full-x.x.x.zip`, otherwise you can download 
-the FloeNavi SyncServer from GitHub. Take a look at the releases.    
+the FloeNavi SyncServer from GitHub (https://github.com/floenavi/floenavi). Take a look at the releases.    
 
 #### Extract the zip or tar file
 Extract the file `FloeNavi-SyncServer-Full-x.x.x.zip` into a directory of your choice, e.g.
+
 - Window: `C:\Program Files\FloeNavi`
 - Mac: `/opt/FloeNavi`
 - Linux: `/opt/FloeNavi`
 
 #### Configure Database (MySQL)
-The FloeNavi SyncServer requires a MySQL Server. Before you can start the FloeNavi SyncServer you have to configure the connection to you MySQL server. Therefore open the file `\Program Files\FloeNavi\FloeNavi-SyncServer\etc\application.yaml` and adjust the properties `floenavi.database.mysql.user` and `floenavi.database.mysql.password`. Replace the user with a valid MySQL user and password with its password. If MySQL is not running on the same machine or uses a different port then adjust the properties `floenavi.database.mysql.host` and `floenavi.database.mysql.port`, too. `floenavi.database.mysql.schema` is database that the FloeNavi SyncServer will use. You do not have to create the database, if the user has the permission to create databases and you do not have to create any tables. This will be done by the FloeNavi SyncServer when it is started the first time.
+The FloeNavi SyncServer requires a MySQL Server. Before you can start the FloeNavi SyncServer you have to configure the 
+connection to you MySQL server. 
+
+1. Open the file `\Program Files\FloeNavi\FloeNavi-SyncServer\etc\application.yaml` 
+2. Set your user name via the property `floenavi.database.mysql.user` 
+3. Set your password via the property `floenavi.database.mysql.password`.
+
+The selected user must be a valid MySQL user and must have permissions to create and alter databases and tables. 
+
+If MySQL is not running on the same machine or does not use the default port 3306 then you have to set the following
+properties, too.
+
+- `floenavi.database.mysql.host`: Insert the IP or hostname of the machine which runs the MySQL server.
+- `floenavi.database.mysql.port`: Insert the port where the MySQL Server has been bound to.
+- `floenavi.database.mysql.schema`: This is the name of the database that will be created by the FloeNavi SyncServer. If a database with the name `floenavi` already exists on the MySQL server, you can choose a custom name by overwriting this property. 
+
+You do not have to create the database, if the user has the permission to create databases, and you do not have to 
+create any tables. This will be done by the FloeNavi SyncServer when it is started the first time.
 
 ### Usage
 The Sync server can be started via a start script as follows
@@ -187,26 +220,27 @@ you have to follow these steps.
 A device can be imported using the following curl command.
 
 ```bash
-curl --request POST --url http://localhost:8080/devices \
---header 'content-type: application/x-www-form-urlencoded' \
---data DEVICE_ID=6180 \
---data 'DEVICE_NAME=seawater tap' \
---data DEVICE_SHORT_NAME=seawatertap_ps \
---data 'DEVICE_TYPE=Water Sampler' --data 'ACTIONS=hoisting,in the water,information,lowering,on deck' 
+curl --request POST --url http://localhost:8080/devices 
+--header "content-type: application/x-www-form-urlencoded" 
+--data DEVICE_ID=6180 
+--data "DEVICE_NAME=seawater tap" 
+--data DEVICE_SHORT_NAME=seawatertap_ps 
+--data "DEVICE_TYPE=Water Sampler" 
+--data "ACTIONS=hoisting,in the water,information,lowering,on deck" 
 ```
 
 If the FloeNavi SyncServer is running then you should get Http status code 200. You can check if the device is actually imported by synchronizing a tablet with the FloeNavi App or running the following curl command.
 
 ```bash
-curl --request GET --url http://localhost:8080/devices \
---header 'Accept: application/json'
+curl --request GET --url http://localhost:8080/devices 
+--header "Accept: application/json"
 ```
 
 You should get the following output or something similar.
 
 ```bash
-curl --request GET --url http://localhost:8080/devices \
---header 'Accept: application/json'
+curl --request GET --url http://localhost:8080/devices 
+--header "Accept: application/json"
 
 [ {
   "id" : 6180,
