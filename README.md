@@ -25,7 +25,7 @@ is set, run the following command in your console and check its output.
 
 ###### Windows
 ```bash
-"%JAVA_HOME%"/bin/java.exe -version
+"%JAVA_HOME%"\bin\java.exe -version
 openjdk version "11.0.2" 2019-01-15
 OpenJDK Runtime Environment 18.9 (build 11.0.2+9)
 OpenJDK 64-Bit Server VM 18.9 (build 11.0.2+9, mixed mode)
@@ -84,7 +84,7 @@ sucessfully. Run the following command in your console and check its output.
 
 ###### Windows
 ```bash
-"%JAVA_HOME%"/bin/java.exe -version
+"%JAVA_HOME%"\bin\java.exe -version
 openjdk version "11.0.2" 2019-01-15
 OpenJDK Runtime Environment 18.9 (build 11.0.2+9)
 OpenJDK 64-Bit Server VM 18.9 (build 11.0.2+9, mixed mode)
