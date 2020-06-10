@@ -1,5 +1,8 @@
 # FloeNavi
 
+# [Release Notes v3](RELEASE-NOTES.md)
+# [Upgrade Instructions v1 to v3](UPGRADE.md)
+
 ## FlowNavi App
 ### Installation
 #### Prerequisites

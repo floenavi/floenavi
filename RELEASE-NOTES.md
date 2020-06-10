@@ -50,6 +50,11 @@
   - Rotation and Scaling
   - Tracking map using origin and x-axis station
 
+## Detailed Feature Description
+
+### Map support
+
+### Grid Deletion
 
 ## Known issues
 
