@@ -142,6 +142,24 @@ properties, too.
 You do not have to create the database, if the user has the permission to create databases, and you do not have to 
 create any tables. This will be done by the FloeNavi SyncServer when it is started the first time.
 
+#### Configure admin token
+The admin token is used to reset a grid. Without a admin token set in the SyncServer's configuration (`etc/application.yaml`) you are not able to reset the current grid and initialize a new one. To set the admin token you have to set the property `floenavi.adminToken` to a string of your choice. After you have set the admin token you can reset the grid with this curl request
+
+```
+curl -X DELETE http://{{host}}/grid -H "Authorization: Bearer MDEyMzQ1Njc4OWFiY2RlZg=="
+```
+where `MDEyMzQ1Njc4OWFiY2RlZg==` is the base64 encoded admin token.
+
+#### Application settings
+The admin and security pin the mmsi of the mothership are distributed via the SyncServer to the Apps. You can configure them in the settings of the SyncServer (`etc/application.yaml`). Take a look at the properties `floenavi.app.adminPin`, `floenavi.app.securityPin` and `floenavi.app.mmsiMothership` and adjust their values.
+
+#### Maps folder
+The aerial photo that is used as background of the map view of the map is also provided by the SyncServer. In. order to provide such a background you have to set the `floenavi.app.maps` property to an absolute path refrenceing a directory, e.g. `C:\maps`. Please be awere that backslashes has to be escaped and the actual value should be `C:\\maps`. In this directory there has to be a jpg encoded aerial photo `map.jpg`with maximum size 2048 x 2048 px and a file `map.info` which contains the data required for geo-referencing. The content of this map should look similar to this
+
+```
+???
+```
+
 ### Usage
 The Sync server can be started via a start script as follows
 
@@ -210,6 +228,8 @@ you have to follow these steps.
    
    **Note:** The version numbers in the file names may differ but this intended. So please replace, e.g. file xyz-1.0.0.jar in
    your instalation with file xyz-2.0.0.jar form the patch.
+   
+   Additionally we had to add some more properties in the configuration file (`etc/application.yaml`) so please also replace the current configuration file with the configuration file from the zip archive and set up the server as described above.
    
    Afterwards you can restart the FloeNavi SyncServer as described above again.
 
