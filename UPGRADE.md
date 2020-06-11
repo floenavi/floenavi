@@ -89,7 +89,7 @@ The length should be at least 20 alphanumerical characters
 - `adminPin` The pin that protects the admin views
 - `securityPin` The pin that protects the deletion of a configured grid
 - `mmsiMothership` The MMSI of the Mothership, special icon is shown on the map
-- `maps` the directory on the server host which contains the map image, e.g. `"C:\\Maps"`
+- `maps` the directory on the SyncServer host which contains the map image, e.g. `"C:\\Maps"`
 
 ## 4. Restarting the Server
 
