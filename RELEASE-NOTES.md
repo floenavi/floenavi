@@ -67,7 +67,7 @@ The app was tested with a jpg of size 3353x1731 pixel and 4MB.
 Images with 12Mpx (4000x3000) or higher should also be possible.
   - The position of the origin and x-axis station need to be manually locatable on the image.
 
-![Beispielkarte](map/map.jpg)
+![Beispielkarte](https://github.com/floenavi/floenavi/raw/v3_0/map/map.jpg)
 
 The origin stations is AIDAperla (red dot at Steinwerder Quay, right of center), 
 the x-axis station is Europa2 (red dot at hamburg cruise center, center and top border).
@@ -95,7 +95,7 @@ The position `x=0`, `y=0` is the top-left corner of the image
 
 If there is no image in the map directory on the SyncServer, the map image on the app will be deleted.
 
-![Beispielkarte](map/map_screenshot.jpg)
+![Beispielkarte](https://github.com/floenavi/floenavi/raw/v3_0/map/map_screenshot.jpg)
 
 
 ### Grid Deletion
@@ -114,7 +114,7 @@ curl -X DELETE -H "Authorization:  Bearer <token>" http://192.168.73.23/grid
 `<token>` needs to be replaced by the `base64` encoded `adminToken` that is specified also in the
 SyncServer `application.yaml` file.
 
-The example `application.yaml` is provided in the [upgrade instructions](UPGRADE.md).
+The example `application.yaml` is provided in the [upgrade instructions](https://github.com/floenavi/floenavi/blob/v3_0/UPGRADE.md).
 
 The encoded token for the default admin token is `MDEyMzQ1Njc4OWFiY2RlZg==`.
 
