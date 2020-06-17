@@ -157,6 +157,17 @@ and in the FloeNavi-Patch archive `etc`-folder.
 need to be escaped as \\\\ when adding them to the configuration file.
 - `C:\FloeNavi\Logs` needs to be written as `C:\\FloeNavi\\Logs`
 
+### SyncServer export flags (v3.1)
+
+To support the requirement of blocking device operations from export to the
+DSHIP proxy system, the database table managing the device operations supports
+now an additional field: `export_status` in table `operation`.
+
+The allowed values for this field are: 
+- `PENDING`: The device operation was synced from the tablet and is ready for export
+- `EXCLUDED`: This device operation will not be exported
+- `EXPORTED`: The device operation was retrieved by the DSHIP proxy and will not be exported again.
+
 ## Known issues
 
 ### App
