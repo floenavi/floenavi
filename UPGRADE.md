@@ -1,7 +1,7 @@
-# Upgrade from v1 to v3
+# Upgrade from v1 to v3.1
 
 This document describes the upgrade process to install
-the incremental update from v1 to v3.
+the incremental update from v1 to v3.1.
 
 **Note:**
 
@@ -22,7 +22,7 @@ the incremental update from v1 to v3.
 
 3. **Extract the patch archive**
    
-Extract the patch archive `FloeNavi-SyncServer-Patch-2.0.0.zip` 
+Extract the patch archive `FloeNavi-SyncServer-Patch-2.1.0.zip` 
 in a temporary directory of your choice.
    
 4. **Copy files to the FloeNavi SyncServer installation**
@@ -38,6 +38,10 @@ there should be a subdirectory called `lib`.
 Copy and Replace all files from the `lib` folder of the extracted patch
 archive into the folder of the installed SyncServer.
 
+The patch archive also contains a directory `etc` which contains the new
+example SyncServer application configuration file including the full set
+of new configuration options for release v3.1.
+
 **Note:** 
 
 - The version numbers in the file names may differ but this intended. 
@@ -45,7 +49,7 @@ archive into the folder of the installed SyncServer.
   but different version numbers, e.g.
   ```
   FloeNavi-SyncServer-1.0.0-SNAPSHOT.jar
-  FloeNavi-SyncServer-2.0.0-SNAPSHOT.jar
+  FloeNavi-SyncServer-2.1.0-SNAPSHOT.jar
   ```
   In this case, please remove the file from the installation directory,
   and **keep** the file added from the extracted patch archive.
@@ -77,19 +81,36 @@ floenavi:
             schema: floenavi
             user: "<insert user name>"
             password: "<insert password here>"
+logging:
+    file:
+        path: "<insert absolute path of log directory here>"
 ```
 
 #### `adminToken` Grid Update Security Token
 
 The admin token is a secret protection key that needs to be supplied 
 to the request for deleting the currently configured grid on the SyncServer.
-The length should be at least 20 alphanumerical characters
+The length should be at least 16 alphanumerical characters
 
 #### `app:` Configuration Options to send to the App
 - `adminPin` The pin that protects the admin views
 - `securityPin` The pin that protects the deletion of a configured grid
 - `mmsiMothership` The MMSI of the Mothership, special icon is shown on the map
 - `maps` the directory on the SyncServer host which contains the map image, e.g. `"C:\\Maps"`
+
+#### `logging:` Audit-Logfile
+
+Starting with v3.1 the SyncServer will write a logfile containing the number
+of synchronized elements (device operations, device information).
+
+Specified here must be the directory that should contain the SyncServer logfiles.
+
+In addition to the audit log, the SyncServer will create a second logfile with
+internal technical messages, i.e. database connection details and framework startup messages.
+
+**Note:**
+- The configured directory will be created if it does not yet exist.
+- Logfiles are rotated per default every 30 days
 
 ## 4. Restarting the Server
 
