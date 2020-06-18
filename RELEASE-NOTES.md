@@ -69,6 +69,19 @@
 
 ## Detailed Feature Description
 
+### Setting up Admin and Security PIN
+
+The Admin View and Grid Deletion View is protected by two different 4-digit PIN codes.
+The codes are configured on the SyncServer.
+Upon syncing with the SyncServer, the PIN codes are updated in the FloeNavi app.
+
+The example `application.yaml` is provided in the 
+[upgrade instructions](https://github.com/floenavi/floenavi/blob/v3_1/UPGRADE.md)
+and in the FloeNavi-Patch archive `etc`-folder.
+ 
+**Note:**
+- The initial PIN configured on the FloeNavi app is 0000.
+  
 ### Map support (v3)
 
 Displaying a map image in the app requires two files to be stored in a admin-defined
