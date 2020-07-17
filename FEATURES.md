@@ -32,7 +32,7 @@ The app was tested with a jpg of size 3353x1731 pixel and 4MB.
 Images with 12Mpx (4000x3000) or higher should also be possible.
   - The position of the origin and x-axis station need to be manually locatable on the image.
 
-https://github.com/floenavi/floenavi/raw/v3_2/map/map.jpg
+![Example Map](https://github.com/floenavi/floenavi/raw/v3_2/map/map.jpg)
 
 The origin stations is AIDAperla (red dot at Steinwerder Quay, right of center), 
 the x-axis station is Europa2 (red dot at hamburg cruise center, center and top border).
@@ -60,7 +60,7 @@ The position `x=0`, `y=0` is the top-left corner of the image
 
 If there is no image in the map directory on the SyncServer, the map image on the app will be deleted.
 
-https://github.com/floenavi/floenavi/raw/v3_2/map/map_screenshot.jpg
+![Example Screenshot](https://github.com/floenavi/floenavi/raw/v3_2/map/map_screenshot.jpg)
 
 
 ### Grid Deletion

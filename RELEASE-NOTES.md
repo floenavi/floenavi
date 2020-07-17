@@ -33,3 +33,4 @@
 - ~~No support for tagging device operations "do not export" tag~~ (fixed in v3.1)
 - ~~No extended logging of synchronisation elements~~ (fixed in v3.1)
 - ~~No synchronisation of additional grid base stations~~ (fixed in v3.2)
+

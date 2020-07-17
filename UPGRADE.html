@@ -13,11 +13,11 @@
   </style>
 </head>
 <body>
-<h1 id="upgrade-from-v1-to-v3.1">Upgrade from v1 to v3.1</h1>
-<p>This document describes the upgrade process to install the incremental update from v1 to v3.1.</p>
+<h1 id="upgrade-from-v3.1-to-v3.2">Upgrade from v3.1 to v3.2</h1>
+<p>This document describes the upgrade process to install the incremental update from v3.2 to v3.1.</p>
 <p><strong>Note:</strong></p>
 <ul>
-<li>SyncServer v1 must be installed on the SyncServer host</li>
+<li>SyncServer v3.1 must be installed on the SyncServer host</li>
 </ul>
 <h2 id="preparing-the-environment">1. Preparing the Environment</h2>
 <p>1.1 <strong>Stop the FloeNavi SyncServer</strong></p>
@@ -27,24 +27,24 @@
 <ol start="3" type="1">
 <li><strong>Extract the patch archive</strong></li>
 </ol>
-<p>Extract the patch archive <code>FloeNavi-SyncServer-Patch-2.1.0.zip</code> in a temporary directory of your choice.</p>
+<p>Extract the patch archive <code>FloeNavi-SyncServer-Patch-2.2.0.zip</code> in a temporary directory of your choice.</p>
 <ol start="4" type="1">
 <li><strong>Copy files to the FloeNavi SyncServer installation</strong></li>
 </ol>
 <p>Point the explorer to the directory where the FloeNavi SyncServer has been installed. If the v1 installation instructions have been followed, the directory should be <code>C:\Program Files\FloeNavi</code>.</p>
 <p>In the FloeNavi installation folder, there should be a subdirectory called <code>lib</code>.</p>
 <p>Copy and Replace all files from the <code>lib</code> folder of the extracted patch archive into the folder of the installed SyncServer.</p>
-<p>The patch archive also contains a directory <code>etc</code> which contains the new example SyncServer application configuration file including the full set of new configuration options for release v3.1.</p>
+<p>The patch archive also contains a directory <code>etc</code> which contains a sample SyncServer application configuration file including the full set of configuration options available for the v3.2 server.</p>
 <p><strong>Note:</strong></p>
 <ul>
 <li><p>The version numbers in the file names may differ but this intended. After the update process there can be files remaining with the same name, but different version numbers, e.g.</p>
-<pre><code>FloeNavi-SyncServer-1.0.0-SNAPSHOT.jar
-FloeNavi-SyncServer-2.1.0-SNAPSHOT.jar</code></pre>
+<pre><code>FloeNavi-SyncServer-2.1.0-SNAPSHOT.jar
+FloeNavi-SyncServer-2.2.0-SNAPSHOT.jar</code></pre>
 <p>In this case, please remove the file from the installation directory, and <strong>keep</strong> the file added from the extracted patch archive.</p></li>
 </ul>
 <h2 id="adjusting-the-configuration-file">3. Adjusting the configuration file</h2>
-<p>The SyncServer v3 provides a set of new configurable options to control the new features that are provided by the update.</p>
-<p>The <code>application.yaml</code> file in the installation’s folder needs to be updated to contain the following content. Existing elements from the old file must be copied, i.e. the database settings. The new configuration options are described below the example file content.</p>
+<p>The SyncServer v3.2 provides the same set of configurable options to control the new features that are provided by the update as SyncServer v3.1.</p>
+<p>If you decide to migrate to the new application.yaml provided in the patch archive, ensure that the content is reflecting your current installation.</p>
 <pre><code>floenavi:
     adminToken: 0123456789abcdef
     app:
@@ -65,7 +65,7 @@ FloeNavi-SyncServer-2.1.0-SNAPSHOT.jar</code></pre>
 logging:
     file:
         path: &quot;&lt;insert absolute path of log directory here&gt;&quot;</code></pre>
-<h4 id="admintoken-grid-update-security-token"><code>adminToken</code> Grid Update Security Token</h4>
+<h4 id="admintoken-grid-update-security-token"><code>adminToken:</code> Grid Update Security Token</h4>
 <p>The admin token is a secret protection key that needs to be supplied to the request for deleting the currently configured grid on the SyncServer. The length should be at least 16 alphanumerical characters</p>
 <h4 id="app-configuration-options-to-send-to-the-app"><code>app:</code> Configuration Options to send to the App</h4>
 <ul>
