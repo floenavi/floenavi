@@ -1,11 +1,11 @@
-# Upgrade from v1 to v3.1
+# Upgrade from v3.1 to v3.2
 
 This document describes the upgrade process to install
-the incremental update from v1 to v3.1.
+the incremental update from v3.2 to v3.1.
 
 **Note:**
 
-- SyncServer v1 must be installed on the SyncServer host
+- SyncServer v3.1 must be installed on the SyncServer host
 
 ## 1. Preparing the Environment
 
@@ -22,7 +22,7 @@ the incremental update from v1 to v3.1.
 
 3. **Extract the patch archive**
    
-Extract the patch archive `FloeNavi-SyncServer-Patch-2.1.0.zip` 
+Extract the patch archive `FloeNavi-SyncServer-Patch-2.2.0.zip` 
 in a temporary directory of your choice.
    
 4. **Copy files to the FloeNavi SyncServer installation**
@@ -38,9 +38,10 @@ there should be a subdirectory called `lib`.
 Copy and Replace all files from the `lib` folder of the extracted patch
 archive into the folder of the installed SyncServer.
 
-The patch archive also contains a directory `etc` which contains the new
-example SyncServer application configuration file including the full set
-of new configuration options for release v3.1.
+The patch archive also contains a directory `etc` 
+which contains a sample SyncServer application configuration file 
+including the full set
+of configuration options available for the v3.2 server.
 
 **Note:** 
 
@@ -48,20 +49,19 @@ of new configuration options for release v3.1.
   After the update process there can be files remaining with the same name,
   but different version numbers, e.g.
   ```
-  FloeNavi-SyncServer-1.0.0-SNAPSHOT.jar
   FloeNavi-SyncServer-2.1.0-SNAPSHOT.jar
+  FloeNavi-SyncServer-2.2.0-SNAPSHOT.jar
   ```
   In this case, please remove the file from the installation directory,
   and **keep** the file added from the extracted patch archive.
 
 ## 3. Adjusting the configuration file
   
-The SyncServer v3 provides a set of new configurable options
-to control the new features that are provided by the update.
+The SyncServer v3.2 provides the same set of configurable options 
+to control the new features that are provided by the update as SyncServer v3.1.
 
-The `application.yaml` file in the installation's folder needs to be updated to contain the following content.
-Existing elements from the old file must be copied, i.e. the database settings.
-The new configuration options are described below the example file content.
+If you decide to migrate to the new application.yaml provided in the patch archive, ensure that
+the content is reflecting your current installation.
 
 ```
 floenavi:
@@ -86,7 +86,7 @@ logging:
         path: "<insert absolute path of log directory here>"
 ```
 
-#### `adminToken` Grid Update Security Token
+#### `adminToken:` Grid Update Security Token
 
 The admin token is a secret protection key that needs to be supplied 
 to the request for deleting the currently configured grid on the SyncServer.
