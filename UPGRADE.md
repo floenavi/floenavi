@@ -1,7 +1,7 @@
 # Upgrade from v3.1 to v3.2
 
 This document describes the upgrade process to install
-the incremental update from v3.2 to v3.1.
+the incremental update from v3.1 to v3.2.
 
 **Note:**
 
