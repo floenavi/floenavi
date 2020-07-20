@@ -13,7 +13,7 @@
   </style>
 </head>
 <body>
-<h1 id="release-notes-for-v3.1">Release-Notes for v3.1</h1>
+<h1 id="release-notes-for-v3.2">Release-Notes for v3.2</h1>
 <ul>
 <li>The delivery of v3.2 package contains the following files
 <ul>
@@ -25,7 +25,7 @@
 <h2 id="new-features-in-v3.2-since-v3.1">New Features in v3.2 since v3.1</h2>
 <h3 id="syncserver">SyncServer</h3>
 <ul>
-<li>Synchronizing additional base stations</li>
+<li>Synchronizing of additional base stations</li>
 <li>DELETE operation for device information</li>
 <li>Support to store log files received from the tablets</li>
 </ul>
@@ -34,14 +34,114 @@
 <li>Synchronization of additional base stations</li>
 <li>Logging support</li>
 </ul>
+<h2 id="new-features-in-v3.1-since-v3">New Features in v3.1 since v3</h2>
+<h3 id="syncserver-1">SyncServer</h3>
+<ul>
+<li>Export Device Operations
+<ul>
+<li>Support for Flag: EXPORTED, PENDING, EXCLUDED</li>
+</ul></li>
+<li>Issues resolved
+<ul>
+<li>CSV fields filtered for <strong>newline</strong> characters</li>
+<li>Device Operations only exported once</li>
+<li>CSV timestamp adjusted to reflect non-standard datetime format requirements</li>
+</ul></li>
+</ul>
+<h3 id="floenavi-app-1">FloeNavi-App</h3>
+<ul>
+<li>Issues resolved
+<ul>
+<li>Removing Origin-Station or X-Axis-Station no longer stops the App</li>
+</ul></li>
+</ul>
+<h2 id="new-features-in-v3-since-v1">New Features in v3 since v1</h2>
+<h3 id="syncserver-2">SyncServer</h3>
+<ul>
+<li>Synchronisation
+<ul>
+<li>Logistical Installations</li>
+<li>Grid Configuration</li>
+</ul></li>
+<li>Sending Configuration Information to the app
+<ul>
+<li>Admin PIN</li>
+<li>Security PIN</li>
+<li>Mothership MMSI</li>
+</ul></li>
+<li>Providing overlay map image and configuration for the app
+<ul>
+<li>Upload folder on SyncServer host</li>
+</ul></li>
+<li>Support for replacing the grid with a new grid from the app</li>
+</ul>
+<h3 id="floenavi-app-2">FloeNavi-App</h3>
+<ul>
+<li>Grid Configuration
+<ul>
+<li>Grid with Origin and X-Axis</li>
+<li>Adding and removing additional base stations</li>
+</ul></li>
+<li>Grid View
+<ul>
+<li>Showing Logistical Installations</li>
+<li>Displaying Waypoints</li>
+<li>Tracking of Mobile Stations</li>
+<li>Showing Base Stations (origin, x-axis and additional)</li>
+<li>Shows Mothership</li>
+<li>Zoom and Pan</li>
+<li>Map image overlay</li>
+<li>Waypoints, Logistical Installations and Base Stations can be hidden</li>
+<li>Popup shows name, lat/lon and x/y of each icon</li>
+</ul></li>
+<li>Creation/Logging
+<ul>
+<li>Logistical Installations</li>
+<li>Device Operations with joined Logistical Installations</li>
+<li>Waypoints</li>
+</ul></li>
+<li>Synchronisation
+<ul>
+<li>Logistical Installations</li>
+<li>Device Information and Operations</li>
+<li>Grid Origin and X-Axis Station</li>
+<li>App Configuration (security configuration and mothership mmsi)</li>
+</ul></li>
+<li>Map support
+<ul>
+<li>Download of map from the SyncServer</li>
+<li>Rotation and Scaling</li>
+<li>Tracking map using origin and x-axis station</li>
+</ul></li>
+</ul>
 <h2 id="known-issues">Known issues</h2>
+<ul>
+<li>Logistical Installations Synchronisation which changes on the sync server and local modifications on the tablet:
+<ul>
+<li>Setup: Observed when testing with two tablets</li>
+<li>Note: Local changes on tablets do not get lost</li>
+<li>A tablet that has local changes to the list of logistical installations, will upload upload the local changes but will never download the merged state from sync server.</li>
+<li>If the state on the sync server changes again, because of an update made by another tablets, both tablets will correctly download the state from the sync server.</li>
+</ul></li>
+<li>Stations that are not sending valid SOG and COG are not contributing to the grid drift calculation, therefore making the prediction of positions unreliable, inside the 3m window between messages.
+<ul>
+<li>COG is typically not available for SOG below 0.4kn (0.2m/s). This will lead to estimated 36m difference between predicted and actual position for a 3m window between messages.</li>
+<li>When COG is not available, SOG and COG is assumed to be 0.</li>
+<li>Stations visibly jump on the grid when a new message is received for a base station</li>
+</ul></li>
+<li>Additional base stations exponentially increase the complexity of the grid calculation.
+<ul>
+<li>Using 8 additional base stations on a simulated tablet is the practical upper limit.</li>
+<li>Adding more stations above the limit will slow down the UI and increase battery usage</li>
+</ul></li>
+</ul>
 <h3 id="app">App</h3>
 <ul>
 <li><del>Removing origin or x-axis base station not working</del> (fixed in v3.1)</li>
 <li><del>Number of synced elements not shown in App Sync View</del> (fixed in v3.2)</li>
 <li><del>Additional grid base stations are not synced between tablets</del> (fixed in v3.2)</li>
 </ul>
-<h3 id="syncserver-1">SyncServer</h3>
+<h3 id="syncserver-3">SyncServer</h3>
 <ul>
 <li><del>No support for deleting device information</del> (fixedi n v3.2)</li>
 <li><del>No support for tagging device operations “do not export” tag</del> (fixed in v3.1)</li>

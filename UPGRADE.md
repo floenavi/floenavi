@@ -29,7 +29,7 @@ in a temporary directory of your choice.
    
 Point the explorer to the directory where the FloeNavi SyncServer 
 has been installed.
-If the v1 installation instructions have been followed, 
+If the previous installation instructions have been followed, 
 the directory should be `C:\Program Files\FloeNavi`.
    
 In the FloeNavi installation folder, 
@@ -45,7 +45,7 @@ of configuration options available for the v3.2 server.
 
 **Note:** 
 
-- The version numbers in the file names may differ but this intended. 
+- The version numbers in the file names may differ but this is intended. 
   After the update process there can be files remaining with the same name,
   but different version numbers, e.g.
   ```
@@ -58,10 +58,10 @@ of configuration options available for the v3.2 server.
 ## 3. Adjusting the configuration file
   
 The SyncServer v3.2 provides the same set of configurable options 
-to control the new features that are provided by the update as SyncServer v3.1.
+to control the new features that are provided by the update to SyncServer v3.1.
 
-If you decide to migrate to the new application.yaml provided in the patch archive, ensure that
-the content is reflecting your current installation.
+If you decide to migrate to the new application.yaml provided in the patch archive, 
+ensure that the content is reflecting your current installation.
 
 ```
 floenavi:

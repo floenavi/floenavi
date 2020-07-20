@@ -31,19 +31,19 @@
 <ol start="4" type="1">
 <li><strong>Copy files to the FloeNavi SyncServer installation</strong></li>
 </ol>
-<p>Point the explorer to the directory where the FloeNavi SyncServer has been installed. If the v1 installation instructions have been followed, the directory should be <code>C:\Program Files\FloeNavi</code>.</p>
+<p>Point the explorer to the directory where the FloeNavi SyncServer has been installed. If the previous installation instructions have been followed, the directory should be <code>C:\Program Files\FloeNavi</code>.</p>
 <p>In the FloeNavi installation folder, there should be a subdirectory called <code>lib</code>.</p>
 <p>Copy and Replace all files from the <code>lib</code> folder of the extracted patch archive into the folder of the installed SyncServer.</p>
 <p>The patch archive also contains a directory <code>etc</code> which contains a sample SyncServer application configuration file including the full set of configuration options available for the v3.2 server.</p>
 <p><strong>Note:</strong></p>
 <ul>
-<li><p>The version numbers in the file names may differ but this intended. After the update process there can be files remaining with the same name, but different version numbers, e.g.</p>
+<li><p>The version numbers in the file names may differ but this is intended. After the update process there can be files remaining with the same name, but different version numbers, e.g.</p>
 <pre><code>FloeNavi-SyncServer-2.1.0-SNAPSHOT.jar
 FloeNavi-SyncServer-2.2.0-SNAPSHOT.jar</code></pre>
 <p>In this case, please remove the file from the installation directory, and <strong>keep</strong> the file added from the extracted patch archive.</p></li>
 </ul>
 <h2 id="adjusting-the-configuration-file">3. Adjusting the configuration file</h2>
-<p>The SyncServer v3.2 provides the same set of configurable options to control the new features that are provided by the update as SyncServer v3.1.</p>
+<p>The SyncServer v3.2 provides the same set of configurable options to control the new features that are provided by the update to SyncServer v3.1.</p>
 <p>If you decide to migrate to the new application.yaml provided in the patch archive, ensure that the content is reflecting your current installation.</p>
 <pre><code>floenavi:
     adminToken: 0123456789abcdef
