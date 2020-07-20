@@ -115,31 +115,37 @@
 </ul></li>
 </ul>
 <h2 id="known-issues">Known issues</h2>
-<ul>
-<li>Logistical Installations Synchronisation which changes on the sync server and local modifications on the tablet:
+<h4 id="app-syncserver-logistical-installations-synchronisation-which-changes-on-the-sync-server-and-local-modifications-on-the-tablet">App &amp; SyncServer: Logistical Installations Synchronisation which changes on the sync server and local modifications on the tablet</h4>
 <ul>
 <li>Setup: Observed when testing with two tablets</li>
 <li>Note: Local changes on tablets do not get lost</li>
 <li>A tablet that has local changes to the list of logistical installations, will upload upload the local changes but will never download the merged state from sync server.</li>
 <li>If the state on the sync server changes again, because of an update made by another tablets, both tablets will correctly download the state from the sync server.</li>
-</ul></li>
-<li>Stations that are not sending valid SOG and COG are not contributing to the grid drift calculation, therefore making the prediction of positions unreliable, inside the 3m window between messages.
+</ul>
+<h4 id="app-invalid-sog-and-cog-are-ignored">App: Invalid SOG and COG are ignored</h4>
 <ul>
+<li>Stations that are not sending valid SOG and COG are not contributing to the grid drift calculation, therefore making the prediction of positions unreliable, inside the 3m window between messages.</li>
 <li>COG is typically not available for SOG below 0.4kn (0.2m/s). This will lead to estimated 36m difference between predicted and actual position for a 3m window between messages.</li>
 <li>When COG is not available, SOG and COG is assumed to be 0.</li>
-<li>Stations visibly jump on the grid when a new message is received for a base station</li>
-</ul></li>
-<li>Additional base stations exponentially increase the complexity of the grid calculation.
+<li>Stations visibly jump on the grid when a new message is received for a station</li>
+</ul>
+<h4 id="app-additional-base-stations-exponentially-increase-the-complexity-of-the-grid-calculation">App: Additional base stations exponentially increase the complexity of the grid calculation</h4>
 <ul>
 <li>Using 8 additional base stations on a simulated tablet is the practical upper limit.</li>
 <li>Adding more stations above the limit will slow down the UI and increase battery usage</li>
-</ul></li>
+</ul>
+<h4 id="app-grid-background-map-image-only-works-when-x-axis-station-is-part-of-the-grid">App: grid background map image only works when x-axis-station is part of the grid</h4>
+<ul>
+<li>The map uses the distance between origin and x-axis station to calculate the scaling factor of the image.</li>
+<li>If there is no x-axis-station on the grid, the distance can not be calculated.</li>
+<li>The distance is only needed for the map background image, not for nominal grid operation.</li>
 </ul>
 <h3 id="app">App</h3>
 <ul>
 <li><del>Removing origin or x-axis base station not working</del> (fixed in v3.1)</li>
 <li><del>Number of synced elements not shown in App Sync View</del> (fixed in v3.2)</li>
 <li><del>Additional grid base stations are not synced between tablets</del> (fixed in v3.2)</li>
+<li>App always downloads additional base stations from sync server, even if there were no changes</li>
 </ul>
 <h3 id="syncserver-3">SyncServer</h3>
 <ul>

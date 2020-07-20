@@ -15,27 +15,38 @@
 <body>
 <h1 id="description-of-the-syncserver-and-floenavi-app-features">Description of the SyncServer and FloeNavi App features</h1>
 <p>Note: The offline version of this document does not have pictures included.</p>
-<h3 id="setting-up-admin-and-security-pin">Setting up Admin and Security PIN</h3>
-<p>The Admin View and Grid Deletion View is protected by two different 4-digit PIN codes. The codes are configured on the SyncServer. Upon syncing with the SyncServer, the PIN codes are updated in the FloeNavi app.</p>
+<ol type="1">
+<li><a href="#pin">Pin for admin and special security access</a></li>
+<li><a href="#map">Support for map images in the grid background</a></li>
+<li><a href="#delete-grid">Deletion of a grid on the sync server</a></li>
+<li><a href="#basestations-sync">Synchronising additional base stations</a></li>
+<li><a href="#logging">Logging and Logfiles</a></li>
+<li><a href="#operations-flags">Device operations export flags</a></li>
+<li><a href="#delete-information">Deletion of device information</a></li>
+</ol>
+<h3 id="pin">SyncServer: Setting up admin and security PIN</h3>
+<p>The admin view and grid deletion view are protected by two different 4-digit PIN codes. The codes are configured on the SyncServer.</p>
+<p>When syncing the tablet with the SyncServer, the PIN codes are updated in the FloeNavi app.</p>
 <p>The example <code>application.yaml</code> is provided in the <a href="https://github.com/floenavi/floenavi/blob/v3_2/UPGRADE.md">upgrade instructions</a> and in the FloeNavi-Patch archive <code>etc</code>-folder.</p>
-<p><strong>Note:</strong> - The initial PIN configured on the FloeNavi app is 0000.</p>
-<h3 id="map-support">Map support</h3>
-<p>Displaying a map image in the app requires two files to be stored in a admin-defined directory on the SyncServer host. The directory used for providing those files is configured in the <code>application.yaml</code> file with the keyword <code>maps</code></p>
+<p><strong>Note:</strong> - The initial PIN configured on the FloeNavi app, for both admin and security pin, is <strong>0000</strong>.</p>
+<h3 id="map">Grid background map image support</h3>
+<p>Displaying a map image in the app requires two files to be stored in an admin-defined directory on the SyncServer host. The directory used for providing those files is configured in the <code>application.yaml</code> file with the keyword <code>maps</code></p>
 <p>The example <code>application.yaml</code> is provided in the <a href="https://github.com/floenavi/floenavi/blob/v3_2/UPGRADE.md">upgrade instructions</a> and in the FloeNavi-Patch archive <code>etc</code>-folder.</p>
 <h4 id="the-map-image-file-map.jpg">1. The map image file <code>map.jpg</code></h4>
 <ul>
-<li>This must be a standard JPEG file. The app was tested with a jpg of size 3353x1731 pixel and 4MB. Images with 12Mpx (4000x3000) or higher should also be possible.</li>
+<li>This must be a standard JPEG file.</li>
+<li>The app was tested with a jpg of size 3353x1731 pixel and 4MB. Images with 12Mpx (4000x3000) or higher should also be possible.</li>
 <li>The position of the origin and x-axis station need to be manually locatable on the image.</li>
 </ul>
 <figure>
 <img src="https://github.com/floenavi/floenavi/raw/v3_2/map/map.jpg" alt="Example Map" /><figcaption>Example Map</figcaption>
 </figure>
-<p>The origin stations is AIDAperla (red dot at Steinwerder Quay, right of center), the x-axis station is Europa2 (red dot at hamburg cruise center, center and top border).</p>
+<p>On the example map: - The origin station is AIDAperla (red dot at Steinwerder Quay, right of center), - the x-axis station is Europa2 (red dot at hamburg cruise center, center and top border).</p>
 <h4 id="the-image-configuration-file-map.info">2. The image configuration file <code>map.info</code></h4>
 <ul>
-<li>The pixel coordinates of the two stations need to be specified</li>
+<li>The file contains the pixel coordinates of the two stations</li>
 </ul>
-<p>Example content of the file:</p>
+<p>For the example map:</p>
 <pre><code>origin 2300 681
 x-axis 1774 201</code></pre>
 <ul>
@@ -43,7 +54,7 @@ x-axis 1774 201</code></pre>
 <li>x-axis is at x=1774, y=201</li>
 </ul>
 <p>The position <code>x=0</code>, <code>y=0</code> is the top-left corner of the image</p>
-<h4 id="disabling-the-map-image">3. Disabling the map image</h4>
+<h4 id="removing-the-map-image">3. Removing the map image</h4>
 <ul>
 <li>Remove the files from the map directory on the SyncServer</li>
 <li>Perform a sync (download) from the SyncServer</li>
@@ -52,21 +63,38 @@ x-axis 1774 201</code></pre>
 <figure>
 <img src="https://github.com/floenavi/floenavi/raw/v3_2/map/map_screenshot.jpg" alt="Example Screenshot" /><figcaption>Example Screenshot</figcaption>
 </figure>
-<h3 id="grid-deletion">Grid Deletion</h3>
+<h3 id="delete-grid">Grid Deletion</h3>
 <p>If there is a grid configured on the SyncServer, and the grid on the app has been deleted with the security pin and a new grid has been initialised, the SyncServer must be prepared to receive the new grid from the app.</p>
 <p>A specific url has to be called on the server and the admin token has to be provided.</p>
 <p>The following <code>curl</code> command can be used to reset the grid on the SyncServer:</p>
-<pre><code>curl -X DELETE -H &quot;Authorization:  Bearer &lt;token&gt;&quot; http://192.168.73.23/grid</code></pre>
+<pre><code>curl -X DELETE -H &quot;Authorization:  Bearer &lt;token&gt;&quot; http://localhost:8080/grid</code></pre>
 <p><code>&lt;token&gt;</code> needs to be replaced by the <code>base64</code> encoded <code>adminToken</code> that is specified also in the SyncServer <code>application.yaml</code> file.</p>
+<p>The <code>base64</code> encoded token for the default admin token is <code>MDEyMzQ1Njc4OWFiY2RlZg==</code>.</p>
 <p>The example <code>application.yaml</code> is provided in the <a href="https://github.com/floenavi/floenavi/blob/v3_2/UPGRADE.md">upgrade instructions</a> and in the FloeNavi-Patch archive <code>etc</code>-folder.</p>
-<p>The encoded token for the default admin token is <code>MDEyMzQ1Njc4OWFiY2RlZg==</code>.</p>
-<h3 id="audit-log">Audit log</h3>
+<h4 id="encoding-the-admin-token-with-base64-on-windows">Encoding the admin token with base64 on Windows</h4>
+<p>The <code>certtool</code> provided by Windows can be used to encode text. For this, the admin token needs to be saved in a file, i.e. <code>in.txt</code>.</p>
+<p>The command <code>certtool -encode in.txt out.b64</code> will create the file <code>out.b64</code> with the encoded content of <code>in.txt</code></p>
+<p>Newlines and linefeeds are encoded, too. Therefore care needs to be taken when creating the infile.</p>
+<p>In the outfile, the encoded text will be wrapped between the lines <code>-----BEGIN CERTIFICATE-----</code> and <code>-----END CERTIFICATE-----</code>.</p>
+<h3 id="basestation-sync">Synchronization of additional base stations</h3>
+<p>Modifications to an existing grid can only be performed from one tablet. When a tablet is making changes to a grid, i.e. adding or removing base stations, these changes are first only recorded to the tablet. The syncserver will accept one update to the additional base stations of a grid.</p>
+<p>Any further modifications to the additional stations need to be authorized similar to the deletion of a grid.</p>
+<pre><code>curl -X DELETE -H &quot;Authorization:  Bearer &lt;token&gt;&quot; http://localhost:8080/grid/additional-stations</code></pre>
+<p><code>&lt;token&gt;</code> needs to be replaced by the <code>base64</code> encoded <code>adminToken</code> that is specified also in the SyncServer <code>application.yaml</code> file.</p>
+<p>The <code>base64</code> encoded token for the default admin token is <code>MDEyMzQ1Njc4OWFiY2RlZg==</code>.</p>
+<p><em>Note:</em></p>
+<p>The authorization workflow is needed to not allow concurrent modifications of the grid. Only allowing one source for modifications to the grid ensures that concurrent changes can not destroy the grid. “Deleting” the additional stations does not destroy the existing grid.</p>
+<h3 id="logging">Audit log</h3>
 <p>The SyncServer will write a message into a dedicated log file every time that elements are received or send.</p>
 <p>The log file must be located in a directory on the SyncServer host. The configuration of the log directory is done in the application.yaml file, with the configuration option <code>logging-&gt;file-&gt;path</code>.</p>
 <p>The example <code>application.yaml</code> is provided in the <a href="https://github.com/floenavi/floenavi/blob/v3_2/UPGRADE.md">upgrade instructions</a> and in the FloeNavi-Patch archive <code>etc</code>-folder.</p>
 <p><strong>Note:</strong> - On Windows, the backslashes  in the windows directory name need to be escaped as \\ when adding them to the configuration file. - <code>C:\FloeNavi\Logs</code> needs to be written as <code>C:\\FloeNavi\\Logs</code></p>
-<h3 id="syncserver-export-flags">SyncServer export flags</h3>
+<h3 id="operations-flags">SyncServer export flags</h3>
 <p>To support the requirement of blocking device operations from export to the DSHIP proxy system, the database table managing the device operations supports now an additional field: <code>export_status</code> in table <code>operation</code>.</p>
 <p>The allowed values for this field are: - <code>PENDING</code>: The device operation was synced from the tablet and is ready for export - <code>EXCLUDED</code>: This device operation will not be exported - <code>EXPORTED</code>: The device operation was retrieved by the DSHIP proxy and will not be exported again.</p>
+<h3 id="delete-information">Deleting device information</h3>
+<p>Device information stored on the sync server can be deleted (flagged as <code>DELETED</code>), and as such they are no longer visible in the FloeNavi app.</p>
+<p>These device information do not get physically deleted from the database, therefore the integrity of the database stays intact.</p>
+<p>Using the device information update workflow, any device for which an update is received, will be undeleted.</p>
 </body>
 </html>

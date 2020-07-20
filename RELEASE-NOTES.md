@@ -82,7 +82,7 @@
   
 ## Known issues
 
-- Logistical Installations Synchronisation which changes on the sync server and local modifications on the tablet:
+#### App & SyncServer: Logistical Installations Synchronisation which changes on the sync server and local modifications on the tablet
   - Setup: Observed when testing with two tablets
   - Note: Local changes on tablets do not get lost
   - A tablet that has local changes to the list of logistical installations, will upload
@@ -90,28 +90,35 @@
   - If the state on the sync server changes again, 
     because of an update made by another tablets,
     both tablets will correctly download the state from the sync server.
- 
-- Stations that are not sending valid SOG and COG are not contributing to the
+
+#### App: Invalid SOG and COG are ignored
+  - Stations that are not sending valid SOG and COG are not contributing to the
   grid drift calculation, therefore making the prediction of positions unreliable, 
   inside the 3m window between messages.
   - COG is typically not available for SOG below 0.4kn (0.2m/s).
   This will lead to estimated 36m difference between 
   predicted and actual position for a 3m window between messages.
   - When COG is not available, SOG and COG is assumed to be 0.
-  - Stations visibly jump on the grid when a new message is received for a base station
+  - Stations visibly jump on the grid when a new message is received for a station
 
-- Additional base stations exponentially increase the complexity 
-  of the grid calculation.
+#### App: Additional base stations exponentially increase the complexity of the grid calculation
+
   - Using 8 additional base stations on a simulated tablet 
     is the practical upper limit.
   - Adding more stations above the limit will slow down the UI and increase battery usage
-  
+
+####  App: grid background map image only works when x-axis-station is part of the grid
+
+  - The map uses the distance between origin and x-axis station to calculate the scaling factor of the image.
+  - If there is no x-axis-station on the grid, the distance can not be calculated.
+  - The distance is only needed for the map background image, not for nominal grid operation. 
        
 ### App
 
 - ~~Removing origin or x-axis base station not working~~ (fixed in v3.1)
 - ~~Number of synced elements not shown in App Sync View~~ (fixed in v3.2)
 - ~~Additional grid base stations are not synced between tablets~~ (fixed in v3.2)
+- App always downloads additional base stations from sync server, even if there were no changes
 
 ### SyncServer
 
