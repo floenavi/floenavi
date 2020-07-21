@@ -140,6 +140,13 @@
 <li>If there is no x-axis-station on the grid, the distance can not be calculated.</li>
 <li>The distance is only needed for the map background image, not for nominal grid operation.</li>
 </ul>
+<h4 id="app-grid-does-not-distinguish-between-invalid-packages-and-lost-stations">App: Grid does not distinguish between invalid packages and lost stations</h4>
+<ul>
+<li>The app will remove stations from the grid when they have not send any update for 10min</li>
+<li>A station that is sending incomplete messages, i.e. SOG and COG values are unavailable, is also considered lost 10min after the last valid (including SOG/COG) message is received.</li>
+<li>A station sending LAT/LON position will be displayed briefly on the grid, only to be removed with the next update (within 15s) if there was no SOG/COG in a message within the last 10min.</li>
+<li>A incorrect LOST message is triggered with every update. The station is not lost, it is just not sending “useful” (complete) information.</li>
+</ul>
 <h3 id="app">App</h3>
 <ul>
 <li><del>Removing origin or x-axis base station not working</del> (fixed in v3.1)</li>
