@@ -83,36 +83,46 @@
 ## Known issues
 
 #### App & SyncServer: Logistical Installations Synchronisation which changes on the sync server and local modifications on the tablet
-  - Setup: Observed when testing with two tablets
-  - Note: Local changes on tablets do not get lost
-  - A tablet that has local changes to the list of logistical installations, will upload
-    upload the local changes but will never download the merged state from sync server.
-  - If the state on the sync server changes again, 
-    because of an update made by another tablets,
-    both tablets will correctly download the state from the sync server.
+- Setup: Observed when testing with two tablets
+- Note: Local changes on tablets do not get lost
+- A tablet that has local changes to the list of logistical installations, will upload
+  upload the local changes but will never download the merged state from sync server.
+- If the state on the sync server changes again, 
+  because of an update made by another tablets,
+  both tablets will correctly download the state from the sync server.
 
 #### App: Invalid SOG and COG are ignored
-  - Stations that are not sending valid SOG and COG are not contributing to the
+- Stations that are not sending valid SOG and COG are not contributing to the
   grid drift calculation, therefore making the prediction of positions unreliable, 
   inside the 3m window between messages.
-  - COG is typically not available for SOG below 0.4kn (0.2m/s).
+- COG is typically not available for SOG below 0.4kn (0.2m/s).
   This will lead to estimated 36m difference between 
   predicted and actual position for a 3m window between messages.
-  - When COG is not available, SOG and COG is assumed to be 0.
-  - Stations visibly jump on the grid when a new message is received for a station
+- When COG is not available, SOG and COG is assumed to be 0.
+- Stations visibly jump on the grid when a new message is received for a station
 
 #### App: Additional base stations exponentially increase the complexity of the grid calculation
 
-  - Using 8 additional base stations on a simulated tablet 
-    is the practical upper limit.
-  - Adding more stations above the limit will slow down the UI and increase battery usage
+- Using 8 additional base stations on a simulated tablet 
+  is the practical upper limit.
+- Adding more stations above the limit will slow down the UI and increase battery usage
 
-####  App: grid background map image only works when x-axis-station is part of the grid
+#### App: grid background map image only works when x-axis-station is part of the grid
 
-  - The map uses the distance between origin and x-axis station to calculate the scaling factor of the image.
-  - If there is no x-axis-station on the grid, the distance can not be calculated.
-  - The distance is only needed for the map background image, not for nominal grid operation. 
+- The map uses the distance between origin and x-axis station to calculate the scaling factor of the image.
+- If there is no x-axis-station on the grid, the distance can not be calculated.
+- The distance is only needed for the map background image, not for nominal grid operation. 
        
+#### App: Grid does not distinguish between invalid packages and lost stations
+
+- The app will remove stations from the grid when they have not send any update for 10min
+- A station that is sending incomplete messages, i.e. SOG and COG values are unavailable, is also
+  considered lost 10min after the last valid (including SOG/COG) message is received.
+- A station sending LAT/LON position will be displayed briefly on the grid, only to be removed
+  with the next update (within 15s) if there was no SOG/COG in a message within the last 10min.
+- A incorrect LOST message is triggered with every update. The station is not lost, it is just not sending
+  "useful" (complete) information.
+
 ### App
 
 - ~~Removing origin or x-axis base station not working~~ (fixed in v3.1)

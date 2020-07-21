@@ -2,6 +2,8 @@
 
 Note: The offline version of this document does not have pictures included.
 
+1. [Initial grid configuration](#initial-grid)
+1. [Grid and station status messages](#status-messages)
 1. [Pin for admin and special security access](#pin)
 1. [Support for map images in the grid background](#map)
 1. [Deletion of a grid on the sync server](#delete-grid)
@@ -9,6 +11,206 @@ Note: The offline version of this document does not have pictures included.
 1. [Logging and Logfiles](#logging)
 1. [Device operations export flags](#operations-flags)
 1. [Deletion of device information](#delete-information)
+
+### App: Initial grid configuration {#initial-gird}
+
+To use the FloeNavi app, a grid needs to be configured by initially providing the MMSI of two stations:
+- the origin station, which will become the origin of the grid, 
+  defining the position `x=0.0m, y=0.0m` on the grid
+- the x-axis station, which will have the role to define 
+  the bearing of the x-axis of the grid. 
+  On the grid it will be located somewhere along the x-axis, with `y=0.0m`, and the `x`-value 
+  computed at each update.
+  
+The x-value of the x-axis-station is the distance of the x-axis station from the origin station.
+Currently, the distance is only required to render the background map image.
+
+#### Admin view - Initial grid configuration
+
+The grid is configured by opening the initial grid configuration view on the admin dashboard.
+
+For nominal operation, a grid is configured by providing the MMSI of the origin station and the MMSI of the x-axis station.
+
+- The configuration of a grid does not require a connection to the AIS-Transponder.
+- It is not possible to configure a new grid, unless the old grid is deleted in the app.
+- Any MMSI can be configured as the origin or x-axis station MMSI
+
+If, at some time in the past, valid positional data was received from a station, the station MMSI
+will appear in the MMSI selection list. This list is updated approximately every 15s.
+
+The configuration view itself will also show if there is recent positional data received 
+from the selected station, displayed in the lower half of the screen as LAT/LON values.
+
+However, the admin may decide to accept the configuration at any time, 
+even if a station has not yet sent any data.
+
+By confirming the configuration, the grid is considered to be **CONFIGURED**.
+The app will start the **INITIALIZATION** in the background, and the grid status icon will
+reflect the state of the grid.
+
+**Notes:**
+- In addition to the initial grid configuration, a grid can be downloaded to the app from the sync server using the sync view
+  - if there is currently no grid configured in the. In this case the grid in the app needs to be deleted
+- If a grid is downloaded from the sync server, it will also start in the initialization phase
+
+##### The initializiation phase
+
+Instead of a one-time initialization phase at the time of grid configuration, the grid is using a time-window
+based grid quality estimation.
+
+- For release v3.1, a time window of 30min was defined, 
+in which for each base station at least 4 valid AIS messages had to be received,
+for the grid to be considered GREEN (stable).
+
+- After receiving feedback for release v3.1, 
+  the time-window was changed to 10min and 1 valid AIS message.
+
+Every time a grid interaction is triggered, i.e. receiving an AIS message with positional/movement data,
+the grid quality (or accuracy) is measured. Based on the timeliness and content of the messages, the
+status icon is changed.
+
+However, the grid will try keep positions, bearings and drift of the grid and registered stations as
+accurate as possible, based on the information that is available.
+
+#### Grid status icon
+
+**Notes:**
+
+- When starting the app, the grid status icon will always be red.
+- The status icon shows the **current** state of the grid, 
+  it is an indicator for the quality of the data used to compute position, 
+  bearings and drift of the grid and registered stations on the grid.
+- A station that is not sending COG or SOG is considered to be offline.
+
+The following color indicator are supported by the status icon:
+
+- RED:
+  - the grid is not yet configured
+  - the grid has not received valid data for enough base station on the grid within 10min.
+  - the grid is **LOST**, i.e. it will not follow the drift and stations may jump with each update
+
+- YELLOW:
+  - the grid has not received valid data for each base station on the grid within 10min, but it has
+    enough data to reliable compute a grid from data that was received within 10min, i.e. because additional stations have been added.
+  - the grid is **DEGRADED**
+  - It is dangerous to remove stations from the grid in this state.
+    
+- GREEN:
+  - the grid has received valid data for each base station (origin, x-axis and additional) within 10 min.
+  
+##### What is a valid AIS message
+
+The AIS protocol allows for the fields in the messages to be marked as **invalid** or **unavailable**.
+
+- A value of 360.0 degrees for the course over ground value (COG)
+- A value of 102.3 knots for the speed over ground value (SOG)
+- A value of 0x6791AC0 (181°) for longitude (LON)
+- A value of 0x3412140 (91°) for latitude (LAT)
+
+For the estimation of the quality of the grid, a station that is sending positional data (LAT/LON),
+but not COG/SOG will be considered **OFFLINE**.
+
+- In v3.2, a station that is not sending COG/SOG data, will generate **LOST** messages.
+
+Even though the COG/SOG data is not available, the grid can be computed to a certain accuracy
+with just the positional data (LAT/LON).
+
+The grid will also try to display these positions anyway, as they are **mostly** accurate for a short time
+after receiving the position data, but they will drift away from their **real** position quickly. This
+is also indicated by a RED grid icon (v3.2).
+ 
+- Typically, COG is not available if SOG is below 0.4kn (0.2m/s).
+- For computation, COG and SOG is assumed to be 0 if one of the two values is not available. 
+  Otherwise, always assuming a course of e.g 360° would further increase the inaccuracy.
+- Typically, the expected error is approx. 36m after 3min.
+
+For release v3.1, AIS-values were used as they were received, ie. COG of 360.0° was used in the grid calculation.
+This could increase the error in positional accuracy to larger than 72m after 3min.
+
+##### Advanced Topic: Details of the grid quality utility function
+
+- A basic score/point system is used to measure the quality of a grid.
+  - the origin station provides 200 points
+  - the x-axis station provides 100 points
+  - each additional station provides 100 points
+  
+- The expected score is based on the synchronized grid configuration, which is also stored at the sync server.
+- The measured score is based on a communication monitor in the app that records a timestamp for the messages received from each station.
+
+- If the measured score is equal to the expected score, the grid icon is colored GREEN.
+- If the measured score is below 300 points, the grid is colored RED.
+- If the measured score is above 300 points, but below the expected score, the grid icon is colored YELLOW. 
+  This is called **DEGRADED**, as there is enough information to compute a grid, but not with data from all configured stations.
+
+The score of 300 can be reached by configuring
+- an origin station and a x-axis station (300 points)
+- an origin station, x-axis-station and one additional base station (400 points)
+- ...
+
+**Notes:**
+- To add additional stations, the grid needs to be setup with origin and x-axis station. For triangulation,
+  the initial X/Y-position of the additional stations need to be recorded when these are added to the grid.
+- The app will deny the "base station recovery" action, if the score would fall below 300 points.  
+- Not all possible scenarios can be synchronized with the sync server
+- Not all possible scenarios are supported by the grid prediction algorithm
+  
+**Example**
+
+_Setting up a nominal grid_
+- Origin station: 200 points
+- X-Axis station: 100 points
+
+This is most basic valid configuration, because the configuration provides 300 points. 
+Initially, the grid icon is RED.
+A few of the possible scenarios:
+- If the grid has received valid data for the origin station,
+  and now receives a valid datum for the x-axis station, 
+  the color of the grid icon is set GREEN.
+- If the grid has received a valid datum for the x-axis station, 
+  but the communication monitor has not recorded
+  a valid datum from the origin station within the last 10min, 
+  the color of the grid icon is set RED.
+
+The grid is updated in both cases, and will display the stations and icons.
+However, the accuracy of the computation degrades with the age of the last valid message, as the
+position of a station is predicted based on the last received LAT/LON and COG/SOG values.
+
+
+_Adding a base station to the grid_
+- Additional Station S1: 100 points
+
+The configuration now provides 400 points. Initially, the grid icon is RED.
+A few of the possible scenarios:
+- If the grid has received valid data for the origin station, 
+  and now receives a valid datum for the x-axis station, 
+  the color of the grid icon is set YELLOW.
+  The grid is fully functional, but there is no data for station S1.
+- If the grid has received valid data for the origin and x-axis station, 
+  and now receives a valid datum for the additional station S1, 
+  the color of the grid icon is set GREEN.
+- If the grid now receives a valid datum for the origin station,
+  but the last recorded message for the x-axis station has been 15min ago
+  and the last recorded message for station S1 has been 10s ago,
+  the grid icon is set YELLOW.
+  Since the data for station S1 is more current than the x-axis station, 
+  the grid bearing is reconstructed from the last recorded bearing between origin and S1 and the
+  X/Y-position of S1 on the grid.
+
+
+### Grid and station messages {#status-messages}
+
+The grid algorithm and communication monitor will emit **ALERTS** that are displayed in the grid view.
+Such an alert can be triggered by any update to the grid algorithm, 
+i.e. any message received from the AIS transponder, or a scheduled grid re-calculation request
+to update the grid view and icon positions.
+
+#### Station LOST
+
+`No data received from AIS Station xxxxxxxxx since xxxxx seconds`
+
+The grid algorithm has detected, that a station has not sent any communication since 10min.
+This station is than marked as offline and will no longer be displayed on the grid until
+a new message is received.
 
 
 ### SyncServer: Setting up admin and security PIN {#pin}
@@ -133,8 +335,9 @@ The authorization workflow is needed to not allow concurrent modifications of th
 Only allowing one source for modifications to the grid ensures that concurrent changes can not destroy the grid.
 "Deleting" the additional stations does not destroy the existing grid.
 
-### Audit log {#logging}
+### Logging and Logfiles {#logging}
 
+#### SyncServer audit log
 The SyncServer will write a message into a dedicated log file 
 every time that elements are received or send.
 
@@ -150,6 +353,23 @@ and in the FloeNavi-Patch archive `etc`-folder.
 - On Windows, the backslashes \ in the windows directory name 
 need to be escaped as \\\\ when adding them to the configuration file.
 - `C:\FloeNavi\Logs` needs to be written as `C:\\FloeNavi\\Logs`
+
+#### SyncServer tablet log
+
+Every time a tablet is synchronized with the SyncServer, the tablet will transfer up to 10MB
+of the latest recorded log messages to the SyncServer.
+
+For each tablet a dedicated folder will be created on the SyncServer that will hold these files.
+
+The files are plain text files with timestamped messages, 
+which can easily be split into smaller parts and
+compressed with ZIP or 7-Zip with a high compression ratio.
+
+The following list contain messages indicating typical issues:
+
+##### Connection issues
+
+``
 
 ### SyncServer export flags {#operations-flags}
 
