@@ -19,6 +19,7 @@
 <li><a href="#initial-grid">Initial grid configuration</a></li>
 <li><a href="#status-messages">Grid and station status messages</a></li>
 <li><a href="#ais-transponder">Connection to the AIS transponder</a></li>
+<li><a href="#gps-status">GPS status icon</a></li>
 <li><a href="#pin">Pin for admin and special security access</a></li>
 <li><a href="#map">Support for map images in the grid background</a></li>
 <li><a href="#delete-grid">Deletion of a grid on the sync server</a></li>
@@ -136,11 +137,31 @@
 </ul>
 <p><strong>Notes:</strong> - If a connection is interrupted and is not re-established automatically, the system must wait for a timeout to occur. - The default timeout on Android is 2h. The FloeNavi app uses a modified timeout of 30s - If the AIS network is very quiet, i.e. a window of 30s in which no transponder sends a message, the app may trigger a timeout even though the connection to the AIS transponder is stable. - The AIS transponder also has a timeout on TCP connections, the exact length of the timeout is not known. - The timeout on the AIS transponder seems to be in the range of a few minutes</p>
 <ul>
-<li>It was observed, that Android sometimes disconnects from a WLAN if the access point does not provide internet access, and other WLANs are available. In such a case, Android sends a notification with a request to confirm that the WLAN without internet access should be use anyway. This decision can be made “permanent” so that in the future the WLAN is automatically used.
+<li>It was observed, that Android sometimes disconnects from a WLAN if the access point does not provide internet access, and other WLANs are available. In such a case, Android sends a notification with a request to confirm that the WLAN without internet access should be used anyway. This decision can be made “permanent” so that in the future the WLAN is automatically used.
 <ul>
-<li>One of the two tablets in the test did not allow to make this decision “permanent” and repeatedly dropped the connection every time a network change occured, i.e. leaving the range for a moment</li>
+<li>One of the two tablets in the test did not allow to make this decision “permanent” and repeatedly dropped the connection every time a network change occured, i.e. leaving the WLAN range for a moment</li>
 </ul></li>
 </ul>
+<h3 id="gps-status">GPS status icon</h3>
+<p>Locating the tablet with the tablet built-in GPS receiver is a time and resource consuming operation. Therefore, the tablet uses the GPS only when required, and this is reflected by the GPS status icon.</p>
+<ul>
+<li>The tablet does not constantly try to acquire a GPS fix.
+<ul>
+<li>Google services provide a helper library for GPS services, but from feedback it was understood that not all tablets have the correct update of the google services installed.</li>
+</ul></li>
+<li>The GPS status icon is RED by default, the icon will be updated when the app shows a view that requires a GPS fix:
+<ul>
+<li>the grid view</li>
+<li>adding logistical installations</li>
+<li>adding waypoints</li>
+<li>adding device operations</li>
+<li>adding a base station</li>
+<li>initial grid configuration</li>
+</ul></li>
+</ul>
+<p>The Android OS does not have a concept for GPS status. - A request can be made to locate the tablet via GPS. This request is either successfull, or runs into a timeout.</p>
+<p>The FloeNavi app requests the GPS position of the tablet on views which require a GPS fix. When the position is established, the GPS status icon on that view changes from RED to GREEN. Once in this state, the tablet periodically requests a new GPS fix in the background to update the position.</p>
+<p>On pages that do not require the tablet position, i.e. Dashboards, Sync View, List Views, the GPS status icon will permanently stay RED.</p>
 <h3 id="pin">SyncServer: Setting up admin and security PIN</h3>
 <p>The admin view and grid deletion view are protected by two different 4-digit PIN codes. The codes are configured on the SyncServer.</p>
 <p>When syncing the tablet with the SyncServer, the PIN codes are updated in the FloeNavi app.</p>
