@@ -5,6 +5,7 @@ Note: The offline version of this document does not have pictures included.
 1. [Initial grid configuration](#initial-grid)
 1. [Grid and station status messages](#status-messages)
 1. [Connection to the AIS transponder](#ais-transponder)
+1. [GPS status icon](#gps-status)
 1. [Pin for admin and special security access](#pin)
 1. [Support for map images in the grid background](#map)
 1. [Deletion of a grid on the sync server](#delete-grid)
@@ -240,9 +241,36 @@ terminates the connection and tries to re-connect.
 
 - It was observed, that Android sometimes disconnects from a WLAN if the access point does not provide internet access,
   and other WLANs are available. In such a case, Android sends a notification with a request to confirm that the WLAN without
-  internet access should be use anyway. This decision can be made "permanent" so that in the future the WLAN is automatically used.
+  internet access should be used anyway. This decision can be made "permanent" so that in the future the WLAN is automatically used.
   - One of the two tablets in the test did not allow to make this decision "permanent" and repeatedly dropped the connection every time
-    a network change occured, i.e. leaving the range for a moment
+    a network change occured, i.e. leaving the WLAN range for a moment
+
+### GPS status icon {#gps-status}
+
+Locating the tablet with the tablet built-in GPS receiver is a time and resource consuming operation.
+Therefore, the tablet uses the GPS only when required, and this is reflected by the GPS status icon.
+
+- The tablet does not constantly try to acquire a GPS fix.
+  - Google services provide a helper library for GPS services, but from feedback it was understood that
+    not all tablets have the correct update of the google services installed.
+- The GPS status icon is RED by default, the icon will be updated when the app shows a view that requires a GPS fix:
+  - the grid view
+  - adding logistical installations
+  - adding waypoints
+  - adding device operations
+  - adding a base station
+  - initial grid configuration
+
+The Android OS does not have a concept for GPS status. 
+  - A request can be made to locate the tablet via GPS. This request is either successfull, or runs into a timeout.
+
+The FloeNavi app requests the GPS position of the tablet on views which require a GPS fix. 
+When the position is established, the GPS status icon on that view changes from RED to GREEN.
+Once in this state, the tablet periodically requests a new GPS fix in the background to update the position.
+ 
+On pages that do not require the tablet position, 
+i.e. Dashboards, Sync View, List Views, the GPS status icon will permanently stay RED.
+
 
 ### SyncServer: Setting up admin and security PIN {#pin}
 
