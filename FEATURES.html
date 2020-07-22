@@ -18,6 +18,7 @@
 <ol type="1">
 <li><a href="#initial-grid">Initial grid configuration</a></li>
 <li><a href="#status-messages">Grid and station status messages</a></li>
+<li><a href="#ais-transponder">Connection to the AIS transponder</a></li>
 <li><a href="#pin">Pin for admin and special security access</a></li>
 <li><a href="#map">Support for map images in the grid background</a></li>
 <li><a href="#delete-grid">Deletion of a grid on the sync server</a></li>
@@ -55,9 +56,9 @@
 <ul>
 <li>When starting the app, the grid status icon will always be red.</li>
 <li>The status icon shows the <strong>current</strong> state of the grid, it is an indicator for the quality of the data used to compute position, bearings and drift of the grid and registered stations on the grid.</li>
-<li>A station that is not sending COG or SOG is considered to be offline.</li>
+<li>A station that is not sending COG or SOG is considered to be offline (v3.2).</li>
 </ul>
-<p>The following color indicator are supported by the status icon:</p>
+<p>The following color indicators are supported by the status icon:</p>
 <ul>
 <li>RED:
 <ul>
@@ -95,7 +96,7 @@
 <li>For computation, COG and SOG is assumed to be 0 if one of the two values is not available. Otherwise, always assuming a course of e.g 360° would further increase the inaccuracy.</li>
 <li>Typically, the expected error is approx. 36m after 3min.</li>
 </ul>
-<p>For release v3.1, AIS-values were used as they were received, ie. COG of 360.0° was used in the grid calculation. This could increase the error in positional accuracy to larger than 72m after 3min.</p>
+<p>For release v3.1, AIS-values were used as they were received, i.e. COG of 360.0° was used in the grid calculation. This could increase the error in positional accuracy to larger than 72m after 3min.</p>
 <h5 id="advanced-topic-details-of-the-grid-quality-utility-function">Advanced Topic: Details of the grid quality utility function</h5>
 <ul>
 <li>A basic score/point system is used to measure the quality of a grid.
@@ -116,14 +117,30 @@
 <p><strong>Example</strong></p>
 <p><em>Setting up a nominal grid</em> - Origin station: 200 points - X-Axis station: 100 points</p>
 <p>This is most basic valid configuration, because the configuration provides 300 points. Initially, the grid icon is RED. A few of the possible scenarios: - If the grid has received valid data for the origin station, and now receives a valid datum for the x-axis station, the color of the grid icon is set GREEN. - If the grid has received a valid datum for the x-axis station, but the communication monitor has not recorded a valid datum from the origin station within the last 10min, the color of the grid icon is set RED.</p>
-<p>The grid is updated in both cases, and will display the stations and icons. However, the accuracy of the computation degrades with the age of the last valid message, as the position of a station is predicted based on the last received LAT/LON and COG/SOG values.</p>
+<p>The grid is updated in all cases, and will display the stations and icons. However, the accuracy of the computation degrades with the age of the last valid message, as the position of a station is predicted based on the last received LAT/LON and COG/SOG values.</p>
 <p><em>Adding a base station to the grid</em> - Additional Station S1: 100 points</p>
-<p>The configuration now provides 400 points. Initially, the grid icon is RED. A few of the possible scenarios: - If the grid has received valid data for the origin station, and now receives a valid datum for the x-axis station, the color of the grid icon is set YELLOW. The grid is fully functional, but there is no data for station S1. - If the grid has received valid data for the origin and x-axis station, and now receives a valid datum for the additional station S1, the color of the grid icon is set GREEN. - If the grid now receives a valid datum for the origin station, but the last recorded message for the x-axis station has been 15min ago and the last recorded message for station S1 has been 10s ago, the grid icon is set YELLOW. Since the data for station S1 is more current than the x-axis station, the grid bearing is reconstructed from the last recorded bearing between origin and S1 and the X/Y-position of S1 on the grid.</p>
+<p>The configuration now provides 400 points. Initially, the grid icon is RED. A few of the possible scenarios: - If the grid has received valid data for the origin station, and now receives a valid datum for the x-axis station, the color of the grid icon is set YELLOW. The grid is fully functional, but there is no data for station S1. - If the grid has received valid data for the origin and x-axis station, and now receives a valid datum for the additional station S1, the color of the grid icon is set GREEN. - If the grid now receives a valid datum for the origin station, but the last recorded message for the x-axis station has been 15min ago and the last recorded message for station S1 has been 10s ago, the grid icon is set YELLOW. Since the data for station S1 is more current than the x-axis station, the grid bearing is reconstructed from the last recorded bearing between origin and S1 and the X/Y-position of S1 on the grid. Additional stations increase the accuracy, especially if they are spaced further apart.</p>
 <h3 id="status-messages">Grid and station messages</h3>
-<p>The grid algorithm and communication monitor will emit <strong>ALERTS</strong> that are displayed in the grid view. Such an alert can be triggered by any update to the grid algorithm, i.e. any message received from the AIS transponder, or a scheduled grid re-calculation request to update the grid view and icon positions.</p>
+<p>The grid algorithm and communication monitor will emit <strong>ALERTS</strong> that are displayed in the grid view. Such an alert can be triggered by any update to the grid algorithm, i.e. any message received from the AIS transponder, or a scheduled grid re-calculation request to update the grid view and icon positions (typically performed when the tablet moves a certain distance).</p>
 <h4 id="station-lost">Station LOST</h4>
 <p><code>No data received from AIS Station xxxxxxxxx since xxxxx seconds</code></p>
 <p>The grid algorithm has detected, that a station has not sent any communication since 10min. This station is than marked as offline and will no longer be displayed on the grid until a new message is received.</p>
+<h4 id="ais-transponder">Connection to the AIS transponder</h4>
+<p>On the tablet, a dedicated service is maintaining the connection to the AIS transponder. This service does appear in the Android top action bar as an Icon with the title “FloeNavi App - AIS service running”. The AIS service is running in the background, independent of the FloeNavi app.</p>
+<h4 id="connection-details">Connection Details</h4>
+<ul>
+<li>Every 2.5s the AIS service is trying to establish a connection to the AIS transponder, if there is no existing connection.</li>
+<li>If the AIS service does not receive a message on the connection to the AIS transponder for 30s, it forcefully terminates the connection and tries to re-connect.</li>
+<li>The AIS service does not have access to the WLAN or Ethernet settings on the tablet.</li>
+<li>The AIS service always connects to port 2000 on ip address 192.168.0.1.</li>
+</ul>
+<p><strong>Notes:</strong> - If a connection is interrupted and is not re-established automatically, the system must wait for a timeout to occur. - The default timeout on Android is 2h. The FloeNavi app uses a modified timeout of 30s - If the AIS network is very quiet, i.e. a window of 30s in which no transponder sends a message, the app may trigger a timeout even though the connection to the AIS transponder is stable. - The AIS transponder also has a timeout on TCP connections, the exact length of the timeout is not known. - The timeout on the AIS transponder seems to be in the range of a few minutes</p>
+<ul>
+<li>It was observed, that Android sometimes disconnects from a WLAN if the access point does not provide internet access, and other WLANs are available. In such a case, Android sends a notification with a request to confirm that the WLAN without internet access should be use anyway. This decision can be made “permanent” so that in the future the WLAN is automatically used.
+<ul>
+<li>One of the two tablets in the test did not allow to make this decision “permanent” and repeatedly dropped the connection every time a network change occured, i.e. leaving the range for a moment</li>
+</ul></li>
+</ul>
 <h3 id="pin">SyncServer: Setting up admin and security PIN</h3>
 <p>The admin view and grid deletion view are protected by two different 4-digit PIN codes. The codes are configured on the SyncServer.</p>
 <p>When syncing the tablet with the SyncServer, the PIN codes are updated in the FloeNavi app.</p>
@@ -167,7 +184,7 @@ x-axis 1774 201</code></pre>
 <p>If there is a grid configured on the SyncServer, and the grid on the app has been deleted with the security pin and a new grid has been initialised, the SyncServer must be prepared to receive the new grid from the app.</p>
 <p>A specific url has to be called on the server and the admin token has to be provided.</p>
 <p>The following <code>curl</code> command can be used to reset the grid on the SyncServer:</p>
-<pre><code>curl -X DELETE -H &quot;Authorization:  Bearer &lt;token&gt;&quot; http://localhost:8080/grid</code></pre>
+<pre><code>curl -X DELETE -H &quot;Authorization:  Bearer &lt;token&gt;&quot; http://10.0.2.2:8080/grid</code></pre>
 <p><code>&lt;token&gt;</code> needs to be replaced by the <code>base64</code> encoded <code>adminToken</code> that is specified also in the SyncServer <code>application.yaml</code> file.</p>
 <p>The <code>base64</code> encoded token for the default admin token is <code>MDEyMzQ1Njc4OWFiY2RlZg==</code>.</p>
 <p>The example <code>application.yaml</code> is provided in the <a href="https://github.com/floenavi/floenavi/blob/v3_2/UPGRADE.md">upgrade instructions</a> and in the FloeNavi-Patch archive <code>etc</code>-folder.</p>
@@ -177,27 +194,35 @@ x-axis 1774 201</code></pre>
 <p>Newlines and linefeeds are encoded, too. Therefore care needs to be taken when creating the infile.</p>
 <p>In the outfile, the encoded text will be wrapped between the lines <code>-----BEGIN CERTIFICATE-----</code> and <code>-----END CERTIFICATE-----</code>.</p>
 <h3 id="basestation-sync">Synchronization of additional base stations</h3>
-<p>Modifications to an existing grid can only be performed from one tablet. When a tablet is making changes to a grid, i.e. adding or removing base stations, these changes are first only recorded to the tablet. The syncserver will accept one update to the additional base stations of a grid.</p>
-<p>Any further modifications to the additional stations need to be authorized similar to the deletion of a grid.</p>
-<pre><code>curl -X DELETE -H &quot;Authorization:  Bearer &lt;token&gt;&quot; http://localhost:8080/grid/additional-stations</code></pre>
+<p>Modifications to an existing grid can only be performed from one tablet. When a tablet is making changes to a grid, i.e. adding or removing base stations, these changes must be done from a single tablet.</p>
+<p>The SyncServer will accept only one update to the additional base stations of a grid. Any further modifications to the additional stations need to be authorized similar to the deletion of a grid.</p>
+<pre><code>curl -X DELETE -H &quot;Authorization:  Bearer &lt;token&gt;&quot; http://10.0.2.2:8080/grid/additional-stations</code></pre>
 <p><code>&lt;token&gt;</code> needs to be replaced by the <code>base64</code> encoded <code>adminToken</code> that is specified also in the SyncServer <code>application.yaml</code> file.</p>
 <p>The <code>base64</code> encoded token for the default admin token is <code>MDEyMzQ1Njc4OWFiY2RlZg==</code>.</p>
 <p><em>Note:</em></p>
-<p>The authorization workflow is needed to not allow concurrent modifications of the grid. Only allowing one source for modifications to the grid ensures that concurrent changes can not destroy the grid. “Deleting” the additional stations does not destroy the existing grid.</p>
+<ul>
+<li>This authorization workflow blocks concurrent modifications of the grid done by multiple tablets. By allowing only one source of modifications to the grid ensures that concurrent changes done on multiple tablets do not destroy the grid.</li>
+<li>“Deleting” the additional stations does not destroy the existing grid.</li>
+</ul>
 <h3 id="logging">Logging and Logfiles</h3>
 <h4 id="syncserver-audit-log">SyncServer audit log</h4>
-<p>The SyncServer will write a message into a dedicated log file every time that elements are received or send.</p>
-<p>The log file must be located in a directory on the SyncServer host. The configuration of the log directory is done in the application.yaml file, with the configuration option <code>logging-&gt;file-&gt;path</code>.</p>
-<p>The example <code>application.yaml</code> is provided in the <a href="https://github.com/floenavi/floenavi/blob/v3_2/UPGRADE.md">upgrade instructions</a> and in the FloeNavi-Patch archive <code>etc</code>-folder.</p>
-<p><strong>Note:</strong> - On Windows, the backslashes  in the windows directory name need to be escaped as \\ when adding them to the configuration file. - <code>C:\FloeNavi\Logs</code> needs to be written as <code>C:\\FloeNavi\\Logs</code></p>
+<p>The SyncServer writes message about events, i.e. synchronization of device operations, into a dedicated log file.</p>
+<p>On the SyncServer host, the admin must specify a directory to contain the log files. This setting is available in the file <code>application.yaml</code> in the server <code>etc</code> directory.</p>
+<p>The corresponding configuration option is called <code>logging/file/path</code>.</p>
+<pre><code>logging:
+    file:
+        path: &quot;&lt;insert absolute path of log directory here&gt;&quot;
+</code></pre>
+<p>The <a href="https://github.com/floenavi/floenavi/blob/v3_2/UPGRADE.md">upgrade instructions</a> provide an example <code>application.yaml</code> file, as is the <code>etc</code> directory in the FloeNavi-Patch archive.</p>
+<p><strong>Note:</strong> - On Windows, the backslashes  in the directory name need to be escaped as \\ when adding them to the configuration file. - <code>C:\Program Files\FloeNavi\Logs</code> needs to be written as <code>C:\\Program Files\\FloeNavi\\Logs</code></p>
 <h4 id="syncserver-tablet-log">SyncServer tablet log</h4>
 <p>Every time a tablet is synchronized with the SyncServer, the tablet will transfer up to 10MB of the latest recorded log messages to the SyncServer.</p>
-<p>For each tablet a dedicated folder will be created on the SyncServer that will hold these files.</p>
-<p>The files are plain text files with timestamped messages, which can easily be split into smaller parts and compressed with ZIP or 7-Zip with a high compression ratio.</p>
+<p>For each tablet a dedicated folder will be created on the SyncServer that will hold these files. The name of the folder is generated using the unique Android-ID of the tablet.</p>
+<p>The files are plain text files with timestamped messages, which can easily be split into smaller parts and compressed with ZIP or 7-Zip with a very high compression ratio.</p>
 <p>The following list contain messages indicating typical issues.</p>
 <h5 id="connection-issues">Connection issues</h5>
 <ul>
-<li>The tablet is on a network where a machine 192.168.0.1 is available, but is not responding to requests on port 2000:</li>
+<li>The tablet is on a network where host 192.168.0.1 is available, but is not responding to requests on port 2000:</li>
 </ul>
 <pre><code>AisServiceRunnable: java.net.ConnectException: failed to connect to /192.168.0.1 (port 2000) after 2500ms: isConnected failed: ECONNREFUSED (Connection 
 refused)</code></pre>
@@ -238,19 +263,43 @@ AisServiceRunnable: Decoded name info mmsi: 211699930, name: CARL FEDDERSEN</cod
 <ul>
 <li>Some messages cannot be decoded, but this should not be an issue
 <ul>
-<li>This seems to be a AIS transponder housekeeping message ``` AisServiceRunnable: Received line: $AIALR,083852,002,A,V,AIS: Antenna VSWR exceeds limit*78 AisServiceRunnable: de.awi.floenavi.ais.decoder.AISDecoderException: Message TalkerID is not an AIVDM/AIVDO id, must start with ‘!’: $AIALR</li>
+<li>This seems to be AIS transponder housekeeping message ``` AisServiceRunnable: Received line: $AIALR,083852,002,A,V,AIS: Antenna VSWR exceeds limit*78 AisServiceRunnable: de.awi.floenavi.ais.decoder.AISDecoderException: Message TalkerID is not an AIVDM/AIVDO id, must start with ‘!’: $AIALR</li>
 </ul></li>
 </ul>
 <p>AisServiceRunnable: Received line: $AIALR,100002,007,A,V,AIS: UTC sync invalid*2D AisServiceRunnable: de.awi.floenavi.ais.decoder.AISDecoderException: Message TalkerID is not an AIVDM/AIVDO id, must start with ‘!’: $AIALR</p>
 <p>AisServiceRunnable: Received line: $AIALR,100003,026,A,V,AIS: no position sensor in use*71 AisServiceRunnable: de.awi.floenavi.ais.decoder.AISDecoderException: Message TalkerID is not an AIVDM/AIVDO id, must start with ‘!’: $AIALR</p>
-<p>AisServiceRunnable: Received line: $AIALR,100003,029,A,V,AIS: no valid SOG information*74 AisServiceRunnable: de.awi.floenavi.ais.decoder.AISDecoderException: Message TalkerID is not an AIVDM/AIVDO id, must start with ‘!’: $AIALR ```</p>
-<h5 id="grid-algorithm">Grid algorithm</h5>
-<h3 id="operations-flags">SyncServer export flags</h3>
-<p>To support the requirement of blocking device operations from export to the DSHIP proxy system, the database table managing the device operations supports now an additional field: <code>export_status</code> in table <code>operation</code>.</p>
-<p>The allowed values for this field are: - <code>PENDING</code>: The device operation was synced from the tablet and is ready for export - <code>EXCLUDED</code>: This device operation will not be exported - <code>EXPORTED</code>: The device operation was retrieved by the DSHIP proxy and will not be exported again.</p>
-<h3 id="delete-information">Deleting device information</h3>
-<p>Device information stored on the sync server can be deleted (flagged as <code>DELETED</code>), and as such they are no longer visible in the FloeNavi app.</p>
-<p>These device information do not get physically deleted from the database, therefore the integrity of the database stays intact.</p>
-<p>Using the device information update workflow, any device for which an update is received, will be undeleted.</p>
+<p>AisServiceRunnable: Received line: $AIALR,100003,029,A,V,AIS: no valid SOG information*74 AisServiceRunnable: de.awi.floenavi.ais.decoder.AISDecoderException: Message TalkerID is not an AIVDM/AIVDO id, must start with ‘!’: $AIALR</p>
+<pre><code>
+##### Grid algorithm
+
+
+
+### SyncServer export flags {#operations-flags}
+
+To support the requirement of blocking device operations from export to the
+DSHIP proxy system, the database table managing the device operations supports
+an additional field: `export_status` in table `operation`.
+
+The allowed values for this field are: 
+- `PENDING`: The device operation was synced from the tablet and is ready for export
+- `EXCLUDED`: This device operation will not be exported
+- `EXPORTED`: The device operation was retrieved by the DSHIP proxy and will not be exported again.
+
+### Deleting device information {#delete-information}
+
+Device information stored on the sync server can be deleted (flagged as `DELETED`),
+and as such they are no longer visible in the FloeNavi app.
+
+These device information do not get physically deleted from the database,
+therefore the integrity of the database stays intact.
+
+Using the device information update workflow, 
+any device for which an update is received will be undeleted.
+
+#### Example
+
+Deleting the device with the device id `1`:
+</code></pre>
+<p>curl –verbose –request DELETE –url http://10.0.2.2:8080/devices/1 ```</p>
 </body>
 </html>
