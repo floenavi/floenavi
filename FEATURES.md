@@ -501,9 +501,6 @@ AisServiceRunnable: Received line: $AIALR,100003,029,A,V,AIS: no valid SOG infor
 AisServiceRunnable: de.awi.floenavi.ais.decoder.AISDecoderException: Message TalkerID is not an AIVDM/AIVDO id, must start with '!': $AIALR
 ```
 
-##### Grid algorithm
-
-
 
 ### SyncServer export flags {#operations-flags}
 
