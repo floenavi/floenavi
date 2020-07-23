@@ -37,19 +37,40 @@
 <p>The nominal use case requires a grid built from an AIS base station at the origin position (x=0,y=0) and a station defining the bearing of the x-axis, called x-axis station.</p>
 <p>If these two stations are available and have sent their LAT/LON positions at least once, the app <strong>will</strong> compute a grid and display positions in the grid view.</p>
 <p>The color of the grid status icon is an indicator for the accuracy (or usability) of x/y positions computed for the grid.</p>
-<p>In the nominal case, with an origin station, and an x-axis station, the icon is GREEN <strong>only</strong> when - both stations have sent a datum containing latitude and longitude (LAT/LON), - course over ground, and speed over ground (COG/SOG) values, and - the datum was received not longer than 10min ago.</p>
+<p>In the nominal case, with an origin station, and an x-axis station, the icon is GREEN <strong>only</strong> when</p>
+<ul>
+<li>both stations have sent a datum containing latitude and longitude (LAT/LON),</li>
+<li>course over ground, and speed over ground (COG/SOG) values, and</li>
+<li>the datum was received not longer than 10min ago.</li>
+</ul>
 <p>The app will always use the latest received data from each station. The grid view popup for each station will always show the latest received LAT/LON positions.</p>
 <p><strong>NOTE:</strong></p>
 <p>If COG/SOG values for a station are available, the app will extrapolate a new position (LAT/LON) based on the last received datum, and the elapsed time since the last message was received.</p>
 <p>If the SOG/COG values are not available, the positions of the stations on the grid view <strong>WILL</strong> visibly jump, with each update, unless the ice is absolutely not moving, or the app is used on solid ground.</p>
 <p>For the X/Y positions in the grid view, the app always computes the drift-applied <strong>estimated</strong> origin position and bearing of the grid, before translating a LAT/LON position of a mobile station, or the tablet’s own position into X/Y coordinates.</p>
-<p>The app does not iteratively compute the positions of stations at fixed intervals, but only at specific events: - the app receives a message with LAT/LON and optionally SOG/COG for a base-station, typically every 3min - the app receives a message with LAT/LON and optionally SOG/COG for a mobile station, typically every 3min, maybe faster if the station is moved, or is sending at shorter intervals (mothership). - the tablet requests an update of its own X/Y position. This is triggered at regular intervals and when the located tablet position has moved a certain distance.</p>
+<p>The app does not iteratively compute the positions of stations at fixed intervals, but only at specific events:</p>
+<ul>
+<li>the app receives a message with LAT/LON and optionally SOG/COG for a base-station, typically every 3min</li>
+<li>the app receives a message with LAT/LON and optionally SOG/COG for a mobile station, typically every 3min, maybe faster if the station is moved, or is sending at shorter intervals (mothership).</li>
+<li>the tablet requests an update of its own X/Y position. This is triggered at regular intervals and when the located tablet position has moved a certain distance.</li>
+</ul>
 <p>Starting point for the drift-related extrapolation of positions is always the last received datum.</p>
-<p>This approach was chosen for multiple reasons: - event based processing drastically reduces the resource usage. - the app translates the LAT/LON position the instant it receives an AIS message for a station, and not after some, albeit short, waiting time. The grid view immediately updates and shows the new position of that station. - removing the errors introduced by re-using the result of previous computations, because of e.g. rounding errors. - Android is not a real-time system, the interval at which the Android system calls a service is not guaranteed. - If the tablet or the app is inactive, stopped, sleeping, shut down, resetting, or otherwise interrupted, the app will start from the last received datum, and apply the positional drift correction based on the elapsed time since then. The app will not continue from an old result produced before the interruption.</p>
-<p>Since release v3.1, the app implicitly does compute <strong>all</strong> drift-applied positions of stations at regular intervals, triggered by the grid view.</p>
+<p>This approach was chosen for multiple reasons:</p>
+<ul>
+<li>event based processing reduces the resource usage in many scenarios.</li>
+<li>the app translates the LAT/LON position the instant it receives an AIS message for a station, and not after some, albeit short, waiting time. The grid view immediately updates and shows the new position of that station.</li>
+<li>removing the errors introduced by re-using the result of previous computations, because of e.g. rounding errors.</li>
+<li>Android is not a real-time system, the interval at which the Android system calls a service is not guaranteed.</li>
+<li>If the tablet or the app is inactive, stopped, sleeping, shut down, resetting, or otherwise interrupted, the app will start from the last received datum, and apply the positional drift correction based on the elapsed time since then. The app will not continue from an old result produced before the interruption.</li>
+<li>Opening the grid view will trigger an update of the grid positions and station positions (since v3.1)</li>
+</ul>
 <p><strong>— TBD —</strong></p>
 <h3 id="initial-grid">App: Initial grid configuration</h3>
-<p>To use the FloeNavi app, a grid needs to be configured by initially providing the MMSI of two stations: - the origin station, which will become the origin of the grid, defining the position <code>x=0.0m, y=0.0m</code> on the grid - the x-axis station, which will have the role to define the bearing of the x-axis of the grid. On the grid it will be located somewhere along the x-axis, with <code>y=0.0m</code>, and the <code>x</code>-value computed at each update.</p>
+<p>To use the FloeNavi app, a grid needs to be configured by initially providing the MMSI of two stations:</p>
+<ul>
+<li>the origin station, which will become the origin of the grid, defining the position <code>x=0.0m, y=0.0m</code> on the grid</li>
+<li>the x-axis station, which will have the role to define the bearing of the x-axis of the grid. On the grid it will be located somewhere along the x-axis, with <code>y=0.0m</code>, and the <code>x</code>-value computed at each update.</li>
+</ul>
 <p>The x-value of the x-axis-station position is the distance of the x-axis station from the origin station. Currently, this distance is only required to render the background map image.</p>
 <h4 id="admin-view---initial-grid-configuration">Admin view - Initial grid configuration</h4>
 <p>The grid is configured by opening the initial grid configuration view on the admin dashboard.</p>
@@ -140,9 +161,20 @@
 <li>If the measured score is below 300 points, the grid is colored RED.</li>
 <li><p>If the measured score is above 300 points, but below the expected score, the grid icon is colored YELLOW. This is called <strong>DEGRADED</strong>, as there is enough information to compute a grid, but not with data from all configured stations.</p></li>
 </ul>
-<p>The score of 300 can be reached by configuring - an origin station and a x-axis station (300 points) - an origin station, x-axis-station and one additional base station (400 points) - …</p>
-<p><strong>Notes:</strong> - To add additional stations, the grid needs to be setup with origin and x-axis station. For triangulation, the initial X/Y-position of the additional stations need to be recorded when these are added to the grid. - The app will deny the “base station recovery” action, if the score would fall below 300 points.<br />
-- Not all possible scenarios can be synchronized with the sync server - Not all possible scenarios are supported by the grid drift-calculation algorithm</p>
+<p>The score of 300 can be reached by configuring</p>
+<ul>
+<li>an origin station and a x-axis station (300 points)</li>
+<li>an origin station, x-axis-station and one additional base station (400 points)</li>
+<li>…</li>
+</ul>
+<p><strong>Notes:</strong></p>
+<ul>
+<li>To add additional stations, the grid needs to be setup with origin and x-axis station. For triangulation, the initial X/Y-position of the additional stations need to be recorded when these are added to the grid.</li>
+<li>The app will deny the “base station recovery” action, if the score would fall below 300 points.<br />
+</li>
+<li>Not all possible scenarios can be synchronized with the sync server</li>
+<li>Not all possible scenarios are supported by the grid drift-calculation algorithm</li>
+</ul>
 <p><strong>Example</strong></p>
 <p><em>Setting up a nominal grid</em></p>
 <ul>
@@ -181,8 +213,17 @@
 <li>The AIS service does not have access to the WLAN or Ethernet settings on the tablet.</li>
 <li>The AIS service always connects to port 2000 on ip address 192.168.0.1.</li>
 </ul>
-<p><strong>Notes:</strong> - If a connection is interrupted and is not re-established automatically, the system must wait for a timeout to occur. - The default timeout on Android is 2h. The FloeNavi app uses a modified timeout of 30s - If the AIS network is very quiet, i.e. a window of 30s in which no transponder sends a message, the app may trigger a timeout even though the connection to the AIS transponder is stable. - The AIS transponder also has a timeout on TCP connections, the exact length of the timeout is not known. - The timeout on the AIS transponder seems to be in the range of a few minutes</p>
+<p><strong>Notes:</strong></p>
 <ul>
+<li>If a connection is interrupted and is not re-established automatically, the system must wait for a timeout to occur.
+<ul>
+<li>The default timeout on Android is 2h. The FloeNavi app uses a modified timeout of 30s</li>
+<li>If the AIS network is very quiet, i.e. a window of 30s in which no transponder sends a message, the app may trigger a timeout even though the connection to the AIS transponder is stable.</li>
+<li>The AIS transponder also has a timeout on TCP connections, the exact length of the timeout is not known.
+<ul>
+<li>The timeout on the AIS transponder seems to be in the range of a few minutes</li>
+</ul></li>
+</ul></li>
 <li>It was observed, that Android sometimes disconnects from a WLAN if the access point does not provide internet access, and other WLANs are available. In such a case, Android sends a notification with a request to confirm that the WLAN without internet access should be used anyway. This decision can be made “permanent” so that in the future the WLAN is automatically used.
 <ul>
 <li>One of the two tablets in the test did not allow to make this decision “permanent” and repeatedly dropped the connection every time a network change occured, i.e. leaving the WLAN range for a moment</li>
@@ -346,7 +387,12 @@ AisServiceRunnable: de.awi.floenavi.ais.decoder.AISDecoderException: Message Tal
 AisServiceRunnable: de.awi.floenavi.ais.decoder.AISDecoderException: Message TalkerID is not an AIVDM/AIVDO id, must start with &#39;!&#39;: $AIALR</code></pre>
 <h3 id="operations-flags">SyncServer export flags</h3>
 <p>To support the requirement of blocking device operations from export to the DSHIP proxy system, the database table managing the device operations supports an additional field: <code>export_status</code> in table <code>operation</code>.</p>
-<p>The allowed values for this field are: - <code>PENDING</code>: The device operation was synced from the tablet and is ready for export - <code>EXCLUDED</code>: This device operation will not be exported - <code>EXPORTED</code>: The device operation was retrieved by the DSHIP proxy and will not be exported again.</p>
+<p>The allowed values for this field are:</p>
+<ul>
+<li><code>PENDING</code>: The device operation was synced from the tablet and is ready for export</li>
+<li><code>EXCLUDED</code>: This device operation will not be exported</li>
+<li><code>EXPORTED</code>: The device operation was retrieved by the DSHIP proxy and will not be exported again.</li>
+</ul>
 <h3 id="delete-information">Deleting device information</h3>
 <p>Device information stored on the sync server can be deleted (flagged as <code>DELETED</code>), and as such they are no longer visible in the FloeNavi app.</p>
 <p>These device information do not get physically deleted from the database, therefore the integrity of the database stays intact.</p>

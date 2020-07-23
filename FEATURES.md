@@ -41,6 +41,7 @@ The color of the grid status icon is an indicator for the accuracy (or usability
 
 In the nominal case, with an origin station, and an x-axis station, 
 the icon is GREEN **only** when 
+
 - both stations have sent a datum  containing latitude and longitude (LAT/LON), 
 - course over ground, and speed over ground (COG/SOG) values, and
 - the datum was received not longer than 10min ago.
@@ -61,6 +62,7 @@ the drift-applied **estimated** origin position and bearing of the grid,
 before translating a LAT/LON position of a mobile station, or the tablet's own position into X/Y coordinates.
 
 The app does not iteratively compute the positions of stations at fixed intervals, but only at specific events:
+
 - the app receives a message with LAT/LON and optionally SOG/COG for a base-station, typically every 3min
 - the app receives a message with LAT/LON and optionally SOG/COG for a mobile station, 
   typically every 3min, maybe faster if the station is moved, 
@@ -71,7 +73,8 @@ The app does not iteratively compute the positions of stations at fixed interval
 Starting point for the drift-related extrapolation of positions is always the last received datum.
 
 This approach was chosen for multiple reasons:
-- event based processing drastically reduces the resource usage.
+
+- event based processing reduces the resource usage in many scenarios.
 - the app translates the LAT/LON position the instant it receives an AIS message for a station, and not after some, albeit short, waiting time. 
   The grid view immediately updates and shows the new position of that station.
 - removing the errors introduced by re-using the result of previous computations, because of e.g. rounding errors.
@@ -80,17 +83,14 @@ This approach was chosen for multiple reasons:
   the app will start from the last received datum, 
   and apply the positional drift correction based on the elapsed time since then. 
   The app will not continue from an old result produced before the interruption.
- 
-
-Since release v3.1, the app implicitly does compute **all** drift-applied positions of stations at regular intervals, 
-triggered by the grid view.
-
+- Opening the grid view will trigger an update of the grid positions and station positions (since v3.1)
 
 **--- TBD ---**
 
 ### App: Initial grid configuration {#initial-grid}
 
 To use the FloeNavi app, a grid needs to be configured by initially providing the MMSI of two stations:
+
 - the origin station, which will become the origin of the grid, 
   defining the position `x=0.0m, y=0.0m` on the grid
 - the x-axis station, which will have the role to define 
@@ -222,11 +222,13 @@ This could increase the error in positional accuracy to larger than 72m after 3m
   This is called **DEGRADED**, as there is enough information to compute a grid, but not with data from all configured stations.
 
 The score of 300 can be reached by configuring
+
 - an origin station and a x-axis station (300 points)
 - an origin station, x-axis-station and one additional base station (400 points)
 - ...
 
 **Notes:**
+
 - To add additional stations, the grid needs to be setup with origin and x-axis station. For triangulation,
   the initial X/Y-position of the additional stations need to be recorded when these are added to the grid.
 - The app will deny the "base station recovery" action, if the score would fall below 300 points.  
@@ -324,6 +326,7 @@ terminates the connection and tries to re-connect.
 - The AIS service always connects to port 2000 on ip address 192.168.0.1.
 
 **Notes:**
+
 - If a connection is interrupted and is not re-established automatically, the system must wait for a timeout to occur.
   - The default timeout on Android is 2h. The FloeNavi app uses a modified timeout of 30s
   - If the AIS network is very quiet, i.e. a window of 30s in which no transponder sends a message, the app may trigger a timeout 
@@ -616,6 +619,7 @@ DSHIP proxy system, the database table managing the device operations supports
 an additional field: `export_status` in table `operation`.
 
 The allowed values for this field are: 
+
 - `PENDING`: The device operation was synced from the tablet and is ready for export
 - `EXCLUDED`: This device operation will not be exported
 - `EXPORTED`: The device operation was retrieved by the DSHIP proxy and will not be exported again.
