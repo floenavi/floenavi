@@ -64,7 +64,14 @@
 <p>The configuration view itself will also show if there is recent positional data received from the selected station, displayed in the lower half of the screen as LAT/LON values.</p>
 <p>However, the admin may decide to accept the configuration at any time, even if the app did not receive any data for the stations yet.</p>
 <p>By confirming the configuration, the grid is <strong>CONFIGURED</strong>. The app will start the <strong>INITIALIZATION</strong> in the background, and the grid status icon will reflect the current state of the grid.</p>
-<p><strong>Notes:</strong> - In addition to the initial grid configuration, a grid can be downloaded to the app from the sync server using the sync view - if there is currently no grid configured in the app. In this case there is already a grid in the app, it needs to be deleted - If a grid is downloaded from the sync server, the grid will also be <strong>CONFIGURED</strong>, and start with the initialization phase</p>
+<p><strong>Notes:</strong></p>
+<ul>
+<li>In addition to the initial grid configuration, a grid can be downloaded to the app from the sync server using the sync view
+<ul>
+<li>if there is currently no grid configured in the app. In this case there is already a grid in the app, it needs to be deleted</li>
+</ul></li>
+<li>If a grid is downloaded from the sync server, the grid will also be <strong>CONFIGURED</strong>, and start with the initialization phase</li>
+</ul>
 <h5 id="the-initializiation-phase">The initializiation phase</h5>
 <p>Instead of a one-time initialization phase at the time of grid configuration, the grid is using a time-window based grid quality estimation.</p>
 <ul>
@@ -326,40 +333,26 @@ AisServiceRunnable: Decoded name info mmsi: 211699930, name: CARL FEDDERSEN</cod
 <ul>
 <li>Some messages cannot be decoded, but this should not be an issue
 <ul>
-<li>This seems to be AIS transponder housekeeping message ``` AisServiceRunnable: Received line: $AIALR,083852,002,A,V,AIS: Antenna VSWR exceeds limit*78 AisServiceRunnable: de.awi.floenavi.ais.decoder.AISDecoderException: Message TalkerID is not an AIVDM/AIVDO id, must start with ‘!’: $AIALR</li>
+<li>This seems to be AIS transponder housekeeping message</li>
 </ul></li>
 </ul>
-<p>AisServiceRunnable: Received line: $AIALR,100002,007,A,V,AIS: UTC sync invalid*2D AisServiceRunnable: de.awi.floenavi.ais.decoder.AISDecoderException: Message TalkerID is not an AIVDM/AIVDO id, must start with ‘!’: $AIALR</p>
-<p>AisServiceRunnable: Received line: $AIALR,100003,026,A,V,AIS: no position sensor in use*71 AisServiceRunnable: de.awi.floenavi.ais.decoder.AISDecoderException: Message TalkerID is not an AIVDM/AIVDO id, must start with ‘!’: $AIALR</p>
-<p>AisServiceRunnable: Received line: $AIALR,100003,029,A,V,AIS: no valid SOG information*74 AisServiceRunnable: de.awi.floenavi.ais.decoder.AISDecoderException: Message TalkerID is not an AIVDM/AIVDO id, must start with ‘!’: $AIALR</p>
-<pre><code>
-
-### SyncServer export flags {#operations-flags}
-
-To support the requirement of blocking device operations from export to the
-DSHIP proxy system, the database table managing the device operations supports
-an additional field: `export_status` in table `operation`.
-
-The allowed values for this field are: 
-- `PENDING`: The device operation was synced from the tablet and is ready for export
-- `EXCLUDED`: This device operation will not be exported
-- `EXPORTED`: The device operation was retrieved by the DSHIP proxy and will not be exported again.
-
-### Deleting device information {#delete-information}
-
-Device information stored on the sync server can be deleted (flagged as `DELETED`),
-and as such they are no longer visible in the FloeNavi app.
-
-These device information do not get physically deleted from the database,
-therefore the integrity of the database stays intact.
-
-Using the device information update workflow, 
-any device for which an update is received will be undeleted.
-
-#### Example
-
-Deleting the device with the device id `1`:
-</code></pre>
-<p>curl –verbose –request DELETE –url http://10.0.2.2:8080/devices/1 ```</p>
+<pre><code>AisServiceRunnable: Received line: $AIALR,083852,002,A,V,AIS: Antenna VSWR exceeds limit*78
+AisServiceRunnable: de.awi.floenavi.ais.decoder.AISDecoderException: Message TalkerID is not an AIVDM/AIVDO id, must start with &#39;!&#39;: $AIALR</code></pre>
+<pre><code>AisServiceRunnable: Received line: $AIALR,100002,007,A,V,AIS: UTC sync invalid*2D
+AisServiceRunnable: de.awi.floenavi.ais.decoder.AISDecoderException: Message TalkerID is not an AIVDM/AIVDO id, must start with &#39;!&#39;: $AIALR</code></pre>
+<pre><code>AisServiceRunnable: Received line: $AIALR,100003,026,A,V,AIS: no position sensor in use*71
+AisServiceRunnable: de.awi.floenavi.ais.decoder.AISDecoderException: Message TalkerID is not an AIVDM/AIVDO id, must start with &#39;!&#39;: $AIALR</code></pre>
+<pre><code>AisServiceRunnable: Received line: $AIALR,100003,029,A,V,AIS: no valid SOG information*74
+AisServiceRunnable: de.awi.floenavi.ais.decoder.AISDecoderException: Message TalkerID is not an AIVDM/AIVDO id, must start with &#39;!&#39;: $AIALR</code></pre>
+<h3 id="operations-flags">SyncServer export flags</h3>
+<p>To support the requirement of blocking device operations from export to the DSHIP proxy system, the database table managing the device operations supports an additional field: <code>export_status</code> in table <code>operation</code>.</p>
+<p>The allowed values for this field are: - <code>PENDING</code>: The device operation was synced from the tablet and is ready for export - <code>EXCLUDED</code>: This device operation will not be exported - <code>EXPORTED</code>: The device operation was retrieved by the DSHIP proxy and will not be exported again.</p>
+<h3 id="delete-information">Deleting device information</h3>
+<p>Device information stored on the sync server can be deleted (flagged as <code>DELETED</code>), and as such they are no longer visible in the FloeNavi app.</p>
+<p>These device information do not get physically deleted from the database, therefore the integrity of the database stays intact.</p>
+<p>Using the device information update workflow, any device for which an update is received will be undeleted.</p>
+<h4 id="example">Example</h4>
+<p>Deleting the device with the device id <code>1</code>:</p>
+<pre><code>curl --verbose --request DELETE --url http://10.0.2.2:8080/devices/1</code></pre>
 </body>
 </html>

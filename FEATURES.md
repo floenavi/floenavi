@@ -126,8 +126,10 @@ The app will start the **INITIALIZATION** in the background, and the grid status
 reflect the current state of the grid.
 
 **Notes:**
+
 - In addition to the initial grid configuration, a grid can be downloaded to the app from the sync server using the sync view
   - if there is currently no grid configured in the app. In this case there is already a grid in the app, it needs to be deleted
+
 - If a grid is downloaded from the sync server, the grid will also be **CONFIGURED**, and start with the initialization phase
 
 ##### The initializiation phase
@@ -528,22 +530,26 @@ The following list contain messages indicating typical issues.
 ##### Connection issues
 
 - The tablet is on a network where host 192.168.0.1 is available, but is not responding to requests on port 2000:
+
 ```
 AisServiceRunnable: java.net.ConnectException: failed to connect to /192.168.0.1 (port 2000) after 2500ms: isConnected failed: ECONNREFUSED (Connection 
 refused)
 ```
 
 - The tablet is not connected to a network, or connected to a local (un-routed) network without access to 192.168.0.1:
+
 ```
 AisServiceRunnable: java.net.ConnectException: failed to connect to /192.168.0.1 (port 2000) after 2500ms: connect failed: ENETUNREACH (Network is unreachable)
 ```
 
 - The tablet has not received any messages on the connection to the AIS transponder located at 192.168.0.1 for 30s:
+
 ```
 AisServiceRunnable: java.net.SocketTimeoutException
 ```
 
 - The connection to the SyncServer failed:
+
 ```
 SynchronisationViewModel: java.lang.RuntimeException: java.net.ConnectException: Failed to connect to /10.0.2.2:8080
 ```
@@ -560,18 +566,21 @@ AisServiceRunnable: Decoded geo info mmsi: 211215340, position: (lat:53.52587666
 ```
 
 - A message missing COG and SOG
+
 ```
 AisServiceRunnable: Received line: !AIVDM,1,1,,A,139a8jPP010eU=JN`p8>4?vL0<3g,0*69
 AisServiceRunnable: Decoded geo info mmsi: 211437770, position: (lat:53.5450133333 lon:9.9574083333), movement: (sog:null cog:null)
 ```
 
 - A message missing LAT/LON and COG and SOG
+
 ```
 Received line: !AIVDO,1,1,,,B39>ab03wk?8mP=18D3Q3wwQhP00,0*7D
 Decoded geo info mmsi: 211003816, position: (lat:91.0 lon:181.0), movement: (sog:null cog:null)
 ```
 
 - A **good** message containing voyage data (vessel name)
+
 ```
 AisServiceRunnable: Received line: !AIVDM,2,1,2,B,539q8nT00000@SO37<0<58j0HD@@E9<Dp000001S1`42240Ht00000000000,0*10
 AisServiceRunnable: Decoded name info mmsi: 211699930, name: CARL FEDDERSEN
@@ -579,20 +588,26 @@ AisServiceRunnable: Decoded name info mmsi: 211699930, name: CARL FEDDERSEN
 
 - Some messages cannot be decoded, but this should not be an issue
   - This seems to be AIS transponder housekeeping message
+  
 ```
 AisServiceRunnable: Received line: $AIALR,083852,002,A,V,AIS: Antenna VSWR exceeds limit*78
 AisServiceRunnable: de.awi.floenavi.ais.decoder.AISDecoderException: Message TalkerID is not an AIVDM/AIVDO id, must start with '!': $AIALR
+```
 
+```
 AisServiceRunnable: Received line: $AIALR,100002,007,A,V,AIS: UTC sync invalid*2D
-AisServiceRunnable: de.awi.floenavi.ais.decoder.AISDecoderException: Message TalkerID is not an AIVDM/AIVDO id, must start with '!': $AIALR
-
-AisServiceRunnable: Received line: $AIALR,100003,026,A,V,AIS: no position sensor in use*71
-AisServiceRunnable: de.awi.floenavi.ais.decoder.AISDecoderException: Message TalkerID is not an AIVDM/AIVDO id, must start with '!': $AIALR
-
-AisServiceRunnable: Received line: $AIALR,100003,029,A,V,AIS: no valid SOG information*74
 AisServiceRunnable: de.awi.floenavi.ais.decoder.AISDecoderException: Message TalkerID is not an AIVDM/AIVDO id, must start with '!': $AIALR
 ```
 
+```
+AisServiceRunnable: Received line: $AIALR,100003,026,A,V,AIS: no position sensor in use*71
+AisServiceRunnable: de.awi.floenavi.ais.decoder.AISDecoderException: Message TalkerID is not an AIVDM/AIVDO id, must start with '!': $AIALR
+```
+
+```
+AisServiceRunnable: Received line: $AIALR,100003,029,A,V,AIS: no valid SOG information*74
+AisServiceRunnable: de.awi.floenavi.ais.decoder.AISDecoderException: Message TalkerID is not an AIVDM/AIVDO id, must start with '!': $AIALR
+```
 
 ### SyncServer export flags {#operations-flags}
 
