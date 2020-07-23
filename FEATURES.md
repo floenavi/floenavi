@@ -57,7 +57,7 @@ If the SOG/COG values are not available, the positions of the stations on the gr
 with each update, unless the ice is absolutely not moving, or the app is used on solid ground.
 
 For the X/Y positions in the grid view, the app always computes 
-the drift-applied **true** origin position and bearing of the grid,
+the drift-applied **estimated** origin position and bearing of the grid,
 before translating a LAT/LON position of a mobile station, or the tablet's own position into X/Y coordinates.
 
 The app does not iteratively compute the positions of stations at fixed intervals, but only at specific events:
@@ -77,14 +77,14 @@ This approach was chosen for multiple reasons:
 - removing the errors introduced by re-using the result of previous computations, because of e.g. rounding errors.
 - Android is not a real-time system, the interval at which the Android system calls a service is not guaranteed.
 - If the tablet or the app is inactive, stopped, sleeping, shut down, resetting, or otherwise interrupted, 
-  the computation will not continue on the latest result before the interruption.
-  The app will start from the last received datum, and apply the positional drift correction based on the elapsed time since then.
+  the app will start from the last received datum, 
+  and apply the positional drift correction based on the elapsed time since then. 
+  The app will not continue from an old result produced before the interruption.
  
-However, during the time when the app does not receive AIS messages, the position of any station relative to the grid
-could change because of differences in the SOG/COG values.
 
-Therefore, the app implicitly computes **all** drift-applied positions of stations at regular intervals, 
-because the grid view performs an automatic update every 15s since release v3.1
+Since release v3.1, the app implicitly does compute **all** drift-applied positions of stations at regular intervals, 
+triggered by the grid view.
+
 
 **--- TBD ---**
 
