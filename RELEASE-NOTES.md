@@ -97,16 +97,16 @@
   because of an update made by another tablets,
   both tablets will correctly download the state from the sync server.
 
-~~#### App: Invalid SOG and COG are ignored~~ (fixed in v3.2.1)
+#### App: Invalid SOG and COG are ignored
 
-- ~~Stations that are not sending valid SOG and COG are not contributing to the
+- Stations that are not sending valid SOG and COG are not contributing to the
   grid drift calculation, therefore making the prediction of positions unreliable, 
-  inside the 3m window between messages.~~
-- ~~COG is typically not available for SOG below 0.4kn (0.2m/s).
+  inside the 3m window between messages.
+- COG is typically not available for SOG below 0.4kn (0.2m/s).
   This will lead to estimated 36m difference between 
-  predicted and actual position for a 3m window between messages.~~
-- ~~When COG is not available, SOG and COG is assumed to be 0.~~
-- ~~Stations visibly jump on the grid when a new message is received for a station~~
+  predicted and actual position for a 3m window between messages.
+- When COG is not available, SOG and COG is assumed to be 0.
+- Stations visibly jump on the grid when a new message is received for a station
 
 #### App: Additional base stations exponentially increase the complexity of the grid calculation
 
