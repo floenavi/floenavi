@@ -96,15 +96,15 @@
   because of an update made by another tablets,
   both tablets will correctly download the state from the sync server.
 
-#### App: Invalid SOG and COG are ignored
-- Stations that are not sending valid SOG and COG are not contributing to the
+~~#### App: Invalid SOG and COG are ignored~~ (fixed in v3.2.1)
+- ~~Stations that are not sending valid SOG and COG are not contributing to the
   grid drift calculation, therefore making the prediction of positions unreliable, 
-  inside the 3m window between messages.
-- COG is typically not available for SOG below 0.4kn (0.2m/s).
+  inside the 3m window between messages.~~
+- ~~COG is typically not available for SOG below 0.4kn (0.2m/s).
   This will lead to estimated 36m difference between 
-  predicted and actual position for a 3m window between messages.
-- When COG is not available, SOG and COG is assumed to be 0.
-- Stations visibly jump on the grid when a new message is received for a station
+  predicted and actual position for a 3m window between messages.~~
+- ~~When COG is not available, SOG and COG is assumed to be 0.~~
+- ~~Stations visibly jump on the grid when a new message is received for a station~~
 
 #### App: Additional base stations exponentially increase the complexity of the grid calculation
 
@@ -118,15 +118,15 @@
 - If there is no x-axis-station on the grid, the distance can not be calculated.
 - The distance is only needed for the map background image, not for nominal grid operation. 
        
-#### App: Grid does not distinguish between invalid packages and lost stations
+#### ~~App: Grid does not distinguish between invalid packages and lost stations~~ (fixed in v3.2.1)
 
-- The app will remove stations from the grid when they have not send any update for 10min
-- A station that is sending incomplete messages, i.e. SOG and COG values are unavailable, is also
-  considered lost 10min after the last valid (including SOG/COG) message is received.
-- A station sending LAT/LON position will be displayed briefly on the grid, only to be removed
-  with the next update (within 15s) if there was no SOG/COG in a message within the last 10min.
-- A incorrect LOST message is triggered with every update. The station is not lost, it is just not sending
-  "useful" (complete) information.
+- ~~The app will remove stations from the grid when they have not send any update for 10min~~
+- ~~A station that is sending incomplete messages, i.e. SOG and COG values are unavailable, is also
+  considered lost 10min after the last valid (including SOG/COG) message is received.~~
+- ~~A station sending LAT/LON position will be displayed briefly on the grid, only to be removed
+  with the next update (within 15s) if there was no SOG/COG in a message within the last 10min.~~
+- ~~A incorrect LOST message is triggered with every update. The station is not lost, it is just not sending
+  "useful" (complete) information.~~
 
 ### App
 

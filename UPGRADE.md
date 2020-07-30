@@ -7,7 +7,7 @@ the incremental update from v3.2 to v3.2.1.
 
 * No updates required
 
-## FloeNavi App
+## FloeNavi app
 
 * It is recommended to uninstall the previous app from the tablet.
 * Install the new FloeNavi app APK on the tablet.
