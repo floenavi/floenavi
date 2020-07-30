@@ -13,14 +13,19 @@
   </style>
 </head>
 <body>
-<h1 id="release-notes-for-v3.2">Release-Notes for v3.2</h1>
+<h1 id="release-notes-for-v3.2.1">Release-Notes for v3.2.1</h1>
 <ul>
-<li>The delivery of v3.2 package contains the following files
+<li>The delivery of v3.2.1 package contains the following files
 <ul>
-<li><code>FloeNavi-App-3.2.apk</code>: Full version of the app</li>
-<li><code>FloeNavi-SyncServer-Patch-2.2.0.zip</code>: Incremental update for the SyncServer</li>
+<li><code>FloeNavi-App-3.2.1.apk</code>: Full version of the app</li>
 </ul></li>
-<li>The upgrade of the SyncServer requires an installed <strong>SyncServer v3.1</strong>.</li>
+</ul>
+<h2 id="changes-in-v3.2.1-since-v3.2">Changes in v3.2.1 since v3.2</h2>
+<h3 id="floenavi-app">FloeNavi-App</h3>
+<ul>
+<li>Grid not considered LOST (RED status icon) when stations do not provide COG/SOG. Grid is considered DEGRADED (YELLOW status icon) instead.</li>
+<li>Grid does no longer remove stations from the grid view that are only sending LAT/LON</li>
+<li>When updating the grid view between received AIS messages, stations that do not send COG/SOG are drawn at X/Y-positions established at time of message reception.</li>
 </ul>
 <h2 id="new-features-in-v3.2-since-v3.1">New Features in v3.2 since v3.1</h2>
 <h3 id="syncserver">SyncServer</h3>
@@ -29,7 +34,7 @@
 <li>DELETE operation for device information</li>
 <li>Support to store log files received from the tablets</li>
 </ul>
-<h3 id="floenavi-app">FloeNavi-App</h3>
+<h3 id="floenavi-app-1">FloeNavi-App</h3>
 <ul>
 <li>Synchronization of additional base stations</li>
 <li>Logging support</li>
@@ -48,7 +53,7 @@
 <li>CSV timestamp adjusted to reflect non-standard datetime format requirements</li>
 </ul></li>
 </ul>
-<h3 id="floenavi-app-1">FloeNavi-App</h3>
+<h3 id="floenavi-app-2">FloeNavi-App</h3>
 <ul>
 <li>Issues resolved
 <ul>
@@ -75,7 +80,7 @@
 </ul></li>
 <li>Support for replacing the grid with a new grid from the app</li>
 </ul>
-<h3 id="floenavi-app-2">FloeNavi-App</h3>
+<h3 id="floenavi-app-3">FloeNavi-App</h3>
 <ul>
 <li>Grid Configuration
 <ul>

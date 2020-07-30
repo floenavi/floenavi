@@ -93,38 +93,36 @@
 </ul></li>
 <li>If a grid is downloaded from the sync server, the grid will also be <strong>CONFIGURED</strong>, and start with the initialization phase</li>
 </ul>
-<h5 id="the-initializiation-phase">The initializiation phase</h5>
+<h5 id="the-initialization-phase">The initialization phase</h5>
 <p>Instead of a one-time initialization phase at the time of grid configuration, the grid is using a time-window based grid quality estimation.</p>
 <ul>
 <li><p>For release v3.1, a time window of 30min was defined, in which for each base station at least 4 valid AIS messages had to be received, for the grid to be considered GREEN (stable).</p></li>
-<li><p>After receiving feedback for release v3.1, the time-window was changed to 10min and 1 valid AIS message.</p></li>
+<li><p>After receiving feedback for release v3.1, the time-window was changed to 10min and 1 valid AIS message. Effectively, there no longer is any initialization phase.</p></li>
 </ul>
 <p>Every time a grid interaction is triggered, i.e. receiving an AIS message with positional/movement data, the grid quality (or accuracy) is measured. Based on the timeliness and content of the messages, the status icon is changed.</p>
-<p>However, the grid will try to keep positions, bearings and drift of the grid and registered stations as accurate as possible, based on the information that is currently available.</p>
+<p>However, the grid will always try to keep positions, bearings and drift of the grid and registered stations as accurate as possible, based on the information that is currently available.</p>
 <h4 id="grid-status-icon">Grid status icon</h4>
 <p><strong>Notes:</strong></p>
 <ul>
 <li>When starting the app, the grid status icon will always be red.</li>
 <li>The status icon shows the <strong>current</strong> state of the grid, it is an indicator for the quality of the data used to compute positions, bearings and drift of the grid and registered stations on the grid.</li>
-<li>A station that is not sending COG or SOG is considered to be offline (v3.2).</li>
 </ul>
 <p>The following color indicators are supported by the status icon:</p>
 <ul>
-<li>RED:
+<li><p>RED: (<strong>LOST</strong> grid)</p>
 <ul>
 <li>the grid is not yet configured</li>
 <li>the grid has not received valid data for enough base station on the grid within 10min.</li>
-<li>the grid is <strong>LOST</strong>, i.e. it will not follow the drift and stations may jump with each update</li>
 </ul></li>
-<li>YELLOW:
+<li><p>YELLOW: (<strong>DEGRADED</strong> grid)</p>
 <ul>
-<li>the grid has not received valid data for each base station on the grid within 10min, but it has enough data to reliable compute a grid from data that was received within 10min, i.e. because additional stations have been added.</li>
-<li>the grid is <strong>DEGRADED</strong></li>
-<li>It is dangerous to remove stations from the grid in this state.</li>
+<li>the grid has not received data for each base station on the grid within 10min, but it has enough data to reliable compute a grid from data that was received within 10min, i.e. because additional stations have been added.</li>
+<li>the grid will not follow the ice drift and stations may jump with each update, because incomplete data (i.e. missing COG/SOG) was received for a base stations (in v3.2 this scenario was considered <strong>LOST</strong> and showing RED icon)</li>
+<li>It is dangerous to add or remove stations from the grid in this state.</li>
 </ul></li>
-<li>GREEN:
+<li><p>GREEN: (<strong>NOMINAL</strong> grid)</p>
 <ul>
-<li>the grid has received valid data for each base station (origin, x-axis and additional) within 10 min.</li>
+<li>the grid has received complete data for each base station (origin, x-axis and additional) within 10 min.</li>
 </ul></li>
 </ul>
 <h5 id="what-is-a-valid-ais-message">What is a valid AIS message</h5>
@@ -156,10 +154,11 @@
 <li>each additional station provides 100 points</li>
 </ul></li>
 <li>The expected score is based on the synchronized grid configuration, which is also stored at the sync server.</li>
-<li><p>The measured score is based on a communication monitor in the app that records a timestamp for the messages received from each station.</p></li>
+<li>The measured score is based on a communication monitor in the app that records a timestamp for the messages received from each station.</li>
+<li><p>Since v3.2.1, any message containing LAT/LON is contributing to the score, COG/SOG is not a requirement to increase the quality.</p></li>
 <li>If the measured score is equal to the expected score, the grid icon is colored GREEN.</li>
 <li>If the measured score is below 300 points, the grid is colored RED.</li>
-<li><p>If the measured score is above 300 points, but below the expected score, the grid icon is colored YELLOW. This is called <strong>DEGRADED</strong>, as there is enough information to compute a grid, but not with data from all configured stations.</p></li>
+<li><p>If the measured score is equal or above 300 points, but below the expected score, the grid icon is colored YELLOW. This is called <strong>DEGRADED</strong>, as there is enough information to compute a grid, but not with data from all configured stations.</p></li>
 </ul>
 <p>The score of 300 can be reached by configuring</p>
 <ul>
@@ -204,6 +203,8 @@
 <h4 id="station-lost">Station LOST</h4>
 <p><code>No data received from AIS Station xxxxxxxxx since xxxxx seconds</code></p>
 <p>The grid algorithm has detected, that a station has not sent any communication since 10min. This station is than marked as offline and will no longer be displayed on the grid until a new message is received.</p>
+<p><code>Station xxxxxxxxx has not sent a COG/SOG datum</code></p>
+<p>The station has sent a message including LAT/LON position, but without COG/SOG data. If the station is a base station, the grid will be inaccurate and the grid status is decreased to at least YELLOW (degraded). However, the grid will still be calculated with available data from the LAT/LON position. and data from other stations.</p>
 <h4 id="ais-transponder">Connection to the AIS transponder</h4>
 <p>On the tablet, a dedicated service is maintaining the connection to the AIS transponder. This service does appear in the Android top action bar as an Icon with the title “FloeNavi App - AIS service running”. The AIS service is running in the background, independent of the FloeNavi app.</p>
 <h4 id="connection-details">Connection Details</h4>
@@ -325,7 +326,7 @@ x-axis 1774 201</code></pre>
 <p><strong>Note:</strong> - On Windows, the backslashes  in the directory name need to be escaped as \\ when adding them to the configuration file. - <code>C:\Program Files\FloeNavi\Logs</code> needs to be written as <code>C:\\Program Files\\FloeNavi\\Logs</code></p>
 <h4 id="syncserver-tablet-log">SyncServer tablet log</h4>
 <p>Every time a tablet is synchronized with the SyncServer, the tablet will transfer up to 10MB of the latest recorded log messages to the SyncServer.</p>
-<p>For each tablet a dedicated folder will be created on the SyncServer that will hold these files. The name of the folder is generated using the unique Android-ID of the tablet.</p>
+<p>For the tablet log files, a dedicated folder <code>tablets</code> is created in the log directory. For each tablet, the name of the logfile is generated from the unique Android-ID of the tablet and a timestamp.</p>
 <p>The files are plain text files with timestamped messages, which can easily be split into smaller parts and compressed with ZIP or 7-Zip with a very high compression ratio.</p>
 <p>The following list contain messages indicating typical issues.</p>
 <h5 id="connection-issues">Connection issues</h5>

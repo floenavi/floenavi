@@ -132,7 +132,7 @@ reflect the current state of the grid.
 
 - If a grid is downloaded from the sync server, the grid will also be **CONFIGURED**, and start with the initialization phase
 
-##### The initializiation phase
+##### The initialization phase
 
 Instead of a one-time initialization phase at the time of grid configuration, the grid is using a time-window
 based grid quality estimation.
@@ -143,12 +143,13 @@ for the grid to be considered GREEN (stable).
 
 - After receiving feedback for release v3.1, 
   the time-window was changed to 10min and 1 valid AIS message.
+  Effectively, there no longer is any initialization phase.
 
 Every time a grid interaction is triggered, i.e. receiving an AIS message with positional/movement data,
 the grid quality (or accuracy) is measured. Based on the timeliness and content of the messages, the
 status icon is changed.
 
-However, the grid will try to keep positions, bearings and drift of the grid and registered stations as
+However, the grid will always try to keep positions, bearings and drift of the grid and registered stations as
 accurate as possible, based on the information that is currently available.
 
 #### Grid status icon
@@ -159,23 +160,26 @@ accurate as possible, based on the information that is currently available.
 - The status icon shows the **current** state of the grid, 
   it is an indicator for the quality of the data used to compute positions, 
   bearings and drift of the grid and registered stations on the grid.
-- A station that is not sending COG or SOG is considered to be offline (v3.2).
 
 The following color indicators are supported by the status icon:
 
-- RED:
+- RED: (**LOST** grid)
+
   - the grid is not yet configured
   - the grid has not received valid data for enough base station on the grid within 10min.
-  - the grid is **LOST**, i.e. it will not follow the drift and stations may jump with each update
 
-- YELLOW:
-  - the grid has not received valid data for each base station on the grid within 10min, but it has
+- YELLOW: (**DEGRADED** grid)
+
+  - the grid has not received data for each base station on the grid within 10min, but it has
     enough data to reliable compute a grid from data that was received within 10min, i.e. because additional stations have been added.
-  - the grid is **DEGRADED**
-  - It is dangerous to remove stations from the grid in this state.
+  - the grid will not follow the ice drift and stations may jump with each update, 
+    because incomplete data (i.e. missing COG/SOG) was received for a base stations
+    (in v3.2 this scenario was considered **LOST** and showing RED icon)
+  - It is dangerous to add or remove stations from the grid in this state.
     
-- GREEN:
-  - the grid has received valid data for each base station (origin, x-axis and additional) within 10 min.
+- GREEN: (**NOMINAL** grid)
+
+  - the grid has received complete data for each base station (origin, x-axis and additional) within 10 min.
   
 ##### What is a valid AIS message
 
@@ -215,10 +219,11 @@ This could increase the error in positional accuracy to larger than 72m after 3m
   
 - The expected score is based on the synchronized grid configuration, which is also stored at the sync server.
 - The measured score is based on a communication monitor in the app that records a timestamp for the messages received from each station.
+- Since v3.2.1, any message containing LAT/LON is contributing to the score, COG/SOG is not a requirement to increase the quality.
 
 - If the measured score is equal to the expected score, the grid icon is colored GREEN.
 - If the measured score is below 300 points, the grid is colored RED.
-- If the measured score is above 300 points, but below the expected score, the grid icon is colored YELLOW. 
+- If the measured score is equal or above 300 points, but below the expected score, the grid icon is colored YELLOW. 
   This is called **DEGRADED**, as there is enough information to compute a grid, but not with data from all configured stations.
 
 The score of 300 can be reached by configuring
@@ -309,6 +314,11 @@ The grid algorithm has detected, that a station has not sent any communication s
 This station is than marked as offline and will no longer be displayed on the grid until
 a new message is received.
 
+`Station xxxxxxxxx has not sent a COG/SOG datum` 
+
+The station has sent a message including LAT/LON position, but without COG/SOG data.
+If the station is a base station, the grid will be inaccurate and the grid status is decreased to at least YELLOW (degraded).
+However, the grid will still be calculated with available data from the LAT/LON position. and data from other stations.
 
 #### Connection to the AIS transponder {#ais-transponder}
 
@@ -521,8 +531,8 @@ need to be escaped as \\\\ when adding them to the configuration file.
 Every time a tablet is synchronized with the SyncServer, the tablet will transfer up to 10MB
 of the latest recorded log messages to the SyncServer.
 
-For each tablet a dedicated folder will be created on the SyncServer that will hold these files.
-The name of the folder is generated using the unique Android-ID of the tablet.
+For the tablet log files, a dedicated folder `tablets` is created in the log directory.
+For each tablet, the name of the logfile is generated from the unique Android-ID of the tablet and a timestamp.
 
 The files are plain text files with timestamped messages, 
 which can easily be split into smaller parts and

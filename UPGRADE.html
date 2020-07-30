@@ -13,73 +13,16 @@
   </style>
 </head>
 <body>
-<h1 id="upgrade-from-v3.1-to-v3.2">Upgrade from v3.1 to v3.2</h1>
-<p>This document describes the upgrade process to install the incremental update from v3.1 to v3.2.</p>
-<p><strong>Note:</strong></p>
+<h1 id="upgrade-from-v3.2-to-v3.2.1">Upgrade from v3.2 to v3.2.1</h1>
+<p>This document describes the upgrade process to install the incremental update from v3.2 to v3.2.1.</p>
+<h2 id="syncserver">SyncServer</h2>
 <ul>
-<li>SyncServer v3.1 must be installed on the SyncServer host</li>
+<li>No updates required</li>
 </ul>
-<h2 id="preparing-the-environment">1. Preparing the Environment</h2>
-<p>1.1 <strong>Stop the FloeNavi SyncServer</strong></p>
-<p>Press <code>Ctrl+C</code> in the console where the SyncServer is running. The SyncServer will shut down, and you’ll get your prompt back.</p>
-<p>1.2 <strong>Backup your database (optional but recommended)</strong> Use the MySQL tools to create a backup of your database.</p>
-<h2 id="patching-the-syncserver-directory">2. Patching the SyncServer directory</h2>
-<ol start="3" type="1">
-<li><strong>Extract the patch archive</strong></li>
-</ol>
-<p>Extract the patch archive <code>FloeNavi-SyncServer-Patch-2.2.0.zip</code> in a temporary directory of your choice.</p>
-<ol start="4" type="1">
-<li><strong>Copy files to the FloeNavi SyncServer installation</strong></li>
-</ol>
-<p>Point the explorer to the directory where the FloeNavi SyncServer has been installed. If the previous installation instructions have been followed, the directory should be <code>C:\Program Files\FloeNavi</code>.</p>
-<p>In the FloeNavi installation folder, there should be a subdirectory called <code>lib</code>.</p>
-<p>Copy and Replace all files from the <code>lib</code> folder of the extracted patch archive into the folder of the installed SyncServer.</p>
-<p>The patch archive also contains a directory <code>etc</code> which contains a sample SyncServer application configuration file including the full set of configuration options available for the v3.2 server.</p>
-<p><strong>Note:</strong></p>
+<h2 id="floenavi-app">FloeNavi App</h2>
 <ul>
-<li><p>The version numbers in the file names may differ but this is intended. After the update process there can be files remaining with the same name, but different version numbers, e.g.</p>
-<pre><code>FloeNavi-SyncServer-2.1.0-SNAPSHOT.jar
-FloeNavi-SyncServer-2.2.0-SNAPSHOT.jar</code></pre>
-<p>In this case, please remove the file from the installation directory, and <strong>keep</strong> the file added from the extracted patch archive.</p></li>
+<li>It is recommended to uninstall the previous app from the tablet.</li>
+<li>Install the new FloeNavi app APK on the tablet.</li>
 </ul>
-<h2 id="adjusting-the-configuration-file">3. Adjusting the configuration file</h2>
-<p>The SyncServer v3.2 provides the same set of configurable options to control the new features that are provided by the update to SyncServer v3.1.</p>
-<p>If you decide to migrate to the new application.yaml provided in the patch archive, ensure that the content is reflecting your current installation.</p>
-<pre><code>floenavi:
-    adminToken: 0123456789abcdef
-    app:
-        # Security and admin pin of the Apps. Must adhere to pattern [0-9]{4} (4 digits)
-        adminPin: &quot;&lt;insert admin pin here&gt;&quot;
-        securityPin: &quot;&lt;insert security pin here&gt;&quot;
-
-        # MMSI of the mothership. Must adhere to pattern [0-9]{9} (9 digits)
-        mmsiMothership: &quot;&lt;insert mmsi of the mothership here&gt;&quot;
-        maps: &quot;&lt;insert path to folder with maps&gt;&quot;
-    database:
-        mysql:
-            host: localhost
-            port: 3306
-            schema: floenavi
-            user: &quot;&lt;insert user name&gt;&quot;
-            password: &quot;&lt;insert password here&gt;&quot;
-logging:
-    file:
-        path: &quot;&lt;insert absolute path of log directory here&gt;&quot;</code></pre>
-<h4 id="admintoken-grid-update-security-token"><code>adminToken:</code> Grid Update Security Token</h4>
-<p>The admin token is a secret protection key that needs to be supplied to the request for deleting the currently configured grid on the SyncServer. The length should be at least 16 alphanumerical characters</p>
-<h4 id="app-configuration-options-to-send-to-the-app"><code>app:</code> Configuration Options to send to the App</h4>
-<ul>
-<li><code>adminPin</code> The pin that protects the admin views</li>
-<li><code>securityPin</code> The pin that protects the deletion of a configured grid</li>
-<li><code>mmsiMothership</code> The MMSI of the Mothership, special icon is shown on the map</li>
-<li><code>maps</code> the directory on the SyncServer host which contains the map image, e.g. <code>&quot;C:\\Maps&quot;</code></li>
-</ul>
-<h4 id="logging-audit-logfile"><code>logging:</code> Audit-Logfile</h4>
-<p>Starting with v3.1 the SyncServer will write a logfile containing the number of synchronized elements (device operations, device information).</p>
-<p>Specified here must be the directory that should contain the SyncServer logfiles.</p>
-<p>In addition to the audit log, the SyncServer will create a second logfile with internal technical messages, i.e. database connection details and framework startup messages.</p>
-<p><strong>Note:</strong> - The configured directory will be created if it does not yet exist. - Logfiles are rotated per default every 30 days</p>
-<h2 id="restarting-the-server">4. Restarting the Server</h2>
-<p>Now the server can be restarted.</p>
 </body>
 </html>

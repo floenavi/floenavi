@@ -1,11 +1,16 @@
-# Release-Notes for v3.2
+# Release-Notes for v3.2.1
 
-- The delivery of v3.2 package contains the following files
-  - `FloeNavi-App-3.2.apk`: Full version of the app
-  - `FloeNavi-SyncServer-Patch-2.2.0.zip`: Incremental update for the SyncServer
+- The delivery of v3.2.1 package contains the following files
+  - `FloeNavi-App-3.2.1.apk`: Full version of the app
+
+## Changes in v3.2.1 since v3.2
+
+### FloeNavi-App
+
+- Grid not considered LOST (RED status icon) when stations do not provide COG/SOG. Grid is considered DEGRADED (YELLOW status icon) instead.
+- Grid does no longer remove stations from the grid view that are only sending LAT/LON
+- When updating the grid view between received AIS messages, stations that do not send COG/SOG are drawn at X/Y-positions established at time of message reception.
   
-- The upgrade of the SyncServer requires an installed **SyncServer v3.1**.
-
 ## New Features in v3.2 since v3.1
 
 ### SyncServer
