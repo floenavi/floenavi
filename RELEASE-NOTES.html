@@ -127,7 +127,13 @@
 <li>A tablet that has local changes to the list of logistical installations, will upload upload the local changes but will never download the merged state from sync server.</li>
 <li>If the state on the sync server changes again, because of an update made by another tablets, both tablets will correctly download the state from the sync server.</li>
 </ul>
-<p><del>#### App: Invalid SOG and COG are ignored</del> (fixed in v3.2.1) - <del>Stations that are not sending valid SOG and COG are not contributing to the grid drift calculation, therefore making the prediction of positions unreliable, inside the 3m window between messages.</del> - <del>COG is typically not available for SOG below 0.4kn (0.2m/s). This will lead to estimated 36m difference between predicted and actual position for a 3m window between messages.</del> - <del>When COG is not available, SOG and COG is assumed to be 0.</del> - <del>Stations visibly jump on the grid when a new message is received for a station</del></p>
+<p><del>#### App: Invalid SOG and COG are ignored</del> (fixed in v3.2.1)</p>
+<ul>
+<li><del>Stations that are not sending valid SOG and COG are not contributing to the grid drift calculation, therefore making the prediction of positions unreliable, inside the 3m window between messages.</del></li>
+<li><del>COG is typically not available for SOG below 0.4kn (0.2m/s). This will lead to estimated 36m difference between predicted and actual position for a 3m window between messages.</del></li>
+<li><del>When COG is not available, SOG and COG is assumed to be 0.</del></li>
+<li><del>Stations visibly jump on the grid when a new message is received for a station</del></li>
+</ul>
 <h4 id="app-additional-base-stations-exponentially-increase-the-complexity-of-the-grid-calculation">App: Additional base stations exponentially increase the complexity of the grid calculation</h4>
 <ul>
 <li>Using 8 additional base stations on a simulated tablet is the practical upper limit.</li>
