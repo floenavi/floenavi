@@ -133,18 +133,15 @@
 <li>A value of 0x6791AC0 (181°) for longitude (LON)</li>
 <li>A value of 0x3412140 (91°) for latitude (LAT)</li>
 </ul>
-<p>For the estimation of the quality of the grid, a station that is sending positional data (LAT/LON), but not COG/SOG will be considered <strong>OFFLINE</strong>.</p>
-<ul>
-<li>In v3.2, a station that is not sending COG/SOG data, will generate <strong>LOST</strong> messages.</li>
-</ul>
+<p><del>For the estimation of the quality of the grid, a station that is sending positional data (LAT/LON), but not COG/SOG will be considered <strong>OFFLINE</strong>.</del></p>
+<p>For the estimation of the quality of the grid, a station that is sending positional data (LAT/LON), but not COG/SOG will be considered as if sending a full set of data. (since v3.2.1)</p>
 <p>Even though the COG/SOG data is not available, the grid can be computed to a certain accuracy with just the positional data (LAT/LON).</p>
-<p>The grid will also try to display these positions anyway, as they are <strong>mostly</strong> accurate for a short time after receiving the position data, but they will drift away from their <strong>true</strong> position quickly. This is also indicated by a RED grid icon (v3.2).</p>
+<p>The grid will also try to display these positions anyway, as they are <strong>mostly</strong> accurate for a short time after receiving the position data, but they will drift away from their <strong>true</strong> position quickly. This is also indicated by a <del>RED</del> <strong>YELLOW</strong> grid icon (since v3.2.1).</p>
 <ul>
 <li>Typically, COG is not available if SOG is below 0.4kn (0.2m/s).</li>
 <li>For computation, COG and SOG is assumed to be 0 if one of the two values is not available. Otherwise, always assuming a course of e.g 360° would further increase the inaccuracy.</li>
 <li>Typically, without COG/SOG, the expected error is approx. 36m after 3min.</li>
 </ul>
-<p>For release v3.1, AIS-values were used as they were received, i.e. COG of 360.0° was used in the grid calculation. This could increase the error in positional accuracy to larger than 72m after 3min.</p>
 <h5 id="advanced-topic-details-of-the-grid-quality-utility-function">Advanced Topic: Details of the grid quality utility function</h5>
 <ul>
 <li>A basic score/point system is used to measure the quality of a grid.
@@ -155,10 +152,11 @@
 </ul></li>
 <li>The expected score is based on the synchronized grid configuration, which is also stored at the sync server.</li>
 <li>The measured score is based on a communication monitor in the app that records a timestamp for the messages received from each station.</li>
-<li><p>Since v3.2.1, any message containing LAT/LON is contributing to the score, COG/SOG is not a requirement to increase the quality.</p></li>
+<li>Since v3.2.1, any message containing LAT/LON is contributing to the new score, independent of the availability of COG/SOG.</li>
+<li>Since v3.2.1, a new score based on the availability of COG/SOG is introduced, to distinguish between different types of DEGRADATION, i.e. based on missing COG/SOG, or failed stations in a redundant setup.</li>
 <li>If the measured score is equal to the expected score, the grid icon is colored GREEN.</li>
-<li>If the measured score is below 300 points, the grid is colored RED.</li>
-<li><p>If the measured score is equal or above 300 points, but below the expected score, the grid icon is colored YELLOW. This is called <strong>DEGRADED</strong>, as there is enough information to compute a grid, but not with data from all configured stations.</p></li>
+<li>If the measured score is below 300 points, the grid icon is colored RED.</li>
+<li>If the measured score is equal or above 300 points, but below the expected score, the grid icon is colored YELLOW. This is called <strong>DEGRADED</strong>, as there is enough information to compute a grid, but not with data from all configured stations.</li>
 </ul>
 <p>The score of 300 can be reached by configuring</p>
 <ul>
@@ -203,9 +201,10 @@
 <h4 id="station-lost">Station LOST</h4>
 <p><code>No data received from AIS Station xxxxxxxxx since xxxxx seconds</code></p>
 <p>The grid algorithm has detected, that a station has not sent any communication since 10min. This station is than marked as offline and will no longer be displayed on the grid until a new message is received.</p>
+<h4 id="station-not-sending-cogsog">Station not sending COG/SOG</h4>
 <p><code>Station xxxxxxxxx has not sent a COG/SOG datum</code></p>
 <p>The station has sent a message including LAT/LON position, but without COG/SOG data. If the station is a base station, the grid will be inaccurate and the grid status is decreased to at least YELLOW (degraded). However, the grid will still be calculated with available data from the LAT/LON position. and data from other stations.</p>
-<h4 id="ais-transponder">Connection to the AIS transponder</h4>
+<h3 id="ais-transponder">Connection to the AIS transponder</h3>
 <p>On the tablet, a dedicated service is maintaining the connection to the AIS transponder. This service does appear in the Android top action bar as an Icon with the title “FloeNavi App - AIS service running”. The AIS service is running in the background, independent of the FloeNavi app.</p>
 <h4 id="connection-details">Connection Details</h4>
 <ul>

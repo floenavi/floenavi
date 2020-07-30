@@ -190,25 +190,24 @@ The AIS protocol allows for the fields in the messages to be marked as **invalid
 - A value of 0x6791AC0 (181°) for longitude (LON)
 - A value of 0x3412140 (91°) for latitude (LAT)
 
-For the estimation of the quality of the grid, a station that is sending positional data (LAT/LON),
-but not COG/SOG will be considered **OFFLINE**.
+~~For the estimation of the quality of the grid, a station that is sending positional data (LAT/LON),
+but not COG/SOG will be considered **OFFLINE**.~~
 
-- In v3.2, a station that is not sending COG/SOG data, will generate **LOST** messages.
+For the estimation of the quality of the grid, a station that is sending positional data (LAT/LON),
+but not COG/SOG will be considered as if sending a full set of data. (since v3.2.1)
 
 Even though the COG/SOG data is not available, the grid can be computed to a certain accuracy
 with just the positional data (LAT/LON).
 
 The grid will also try to display these positions anyway, as they are **mostly** accurate for a short time
 after receiving the position data, but they will drift away from their **true** position quickly. This
-is also indicated by a RED grid icon (v3.2).
+is also indicated by a ~~RED~~ **YELLOW** grid icon (since v3.2.1).
  
 - Typically, COG is not available if SOG is below 0.4kn (0.2m/s).
 - For computation, COG and SOG is assumed to be 0 if one of the two values is not available. 
   Otherwise, always assuming a course of e.g 360° would further increase the inaccuracy.
 - Typically, without COG/SOG, the expected error is approx. 36m after 3min.
 
-For release v3.1, AIS-values were used as they were received, i.e. COG of 360.0° was used in the grid calculation.
-This could increase the error in positional accuracy to larger than 72m after 3min.
 
 ##### Advanced Topic: Details of the grid quality utility function
 
@@ -219,10 +218,11 @@ This could increase the error in positional accuracy to larger than 72m after 3m
   
 - The expected score is based on the synchronized grid configuration, which is also stored at the sync server.
 - The measured score is based on a communication monitor in the app that records a timestamp for the messages received from each station.
-- Since v3.2.1, any message containing LAT/LON is contributing to the score, COG/SOG is not a requirement to increase the quality.
-
+- Since v3.2.1, any message containing LAT/LON is contributing to the new score, independent of the availability of COG/SOG.
+- Since v3.2.1, a new score based on the availability of COG/SOG is introduced, to distinguish between different types of DEGRADATION, 
+  i.e. based on missing COG/SOG, or failed stations in a redundant setup.
 - If the measured score is equal to the expected score, the grid icon is colored GREEN.
-- If the measured score is below 300 points, the grid is colored RED.
+- If the measured score is below 300 points, the grid icon is colored RED.
 - If the measured score is equal or above 300 points, but below the expected score, the grid icon is colored YELLOW. 
   This is called **DEGRADED**, as there is enough information to compute a grid, but not with data from all configured stations.
 
@@ -314,13 +314,15 @@ The grid algorithm has detected, that a station has not sent any communication s
 This station is than marked as offline and will no longer be displayed on the grid until
 a new message is received.
 
+#### Station not sending COG/SOG
+
 `Station xxxxxxxxx has not sent a COG/SOG datum` 
 
 The station has sent a message including LAT/LON position, but without COG/SOG data.
 If the station is a base station, the grid will be inaccurate and the grid status is decreased to at least YELLOW (degraded).
 However, the grid will still be calculated with available data from the LAT/LON position. and data from other stations.
 
-#### Connection to the AIS transponder {#ais-transponder}
+### Connection to the AIS transponder {#ais-transponder}
 
 On the tablet, a dedicated service is maintaining the connection to the AIS transponder.
 This service does appear in the Android top action bar as an Icon with the title "FloeNavi App - AIS service running".
