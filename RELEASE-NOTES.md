@@ -88,6 +88,7 @@
 ## Known issues
 
 #### App & SyncServer: Logistical Installations Synchronisation which changes on the sync server and local modifications on the tablet
+
 - Setup: Observed when testing with two tablets
 - Note: Local changes on tablets do not get lost
 - A tablet that has local changes to the list of logistical installations, will upload
@@ -97,6 +98,7 @@
   both tablets will correctly download the state from the sync server.
 
 ~~#### App: Invalid SOG and COG are ignored~~ (fixed in v3.2.1)
+
 - ~~Stations that are not sending valid SOG and COG are not contributing to the
   grid drift calculation, therefore making the prediction of positions unreliable, 
   inside the 3m window between messages.~~
